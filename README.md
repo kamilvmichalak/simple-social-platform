@@ -129,6 +129,7 @@ Po uruchomieniu aplikacji, dokumentacja API dostępna jest pod adresem:
 - `PUT /api/posts/{id}` - Aktualizacja posta
 - `
 
+```
 simple-social-platform/
 ├── src/
 │   ├── main/
@@ -209,3 +210,4 @@ simple-social-platform/
 │                   └── repository/
 ├── pom.xml
 └── README.md
+```
