@@ -1,0 +1,188 @@
+classDiagram
+    class User {
+        -Long id
+        -String username
+        -String email
+        -String password
+        -String firstName
+        -String lastName
+        -String profilePicture
+        -LocalDateTime createdAt
+        -boolean isActive
+        -Role role
+        +register(UserRegistrationRequest): User
+        +updateProfile(UserProfileRequest): User
+        +deactivateAccount(): void
+        +findByUsername(String): User
+        +findByEmail(String): User
+    }
+    
+    class Post {
+        -Long id
+        -User author
+        -String content
+        -List~String~ mediaUrls
+        -LocalDateTime createdAt
+        -boolean isDeleted
+        -List~Comment~ comments
+        -List~Reaction~ reactions
+        +createPost(PostRequest): Post
+        +updatePost(Long, PostRequest): Post
+        +deletePost(Long): void
+        +findByAuthor(User): List~Post~
+        +findByAuthorAndFriends(User): List~Post~
+    }
+    
+    class Comment {
+        -Long id
+        -User author
+        -Post post
+        -String content
+        -LocalDateTime createdAt
+        -boolean isDeleted
+        -Comment parentComment
+        -List~Comment~ replies
+        +createComment(CommentRequest): Comment
+        +updateComment(Long, CommentRequest): Comment
+        +deleteComment(Long): void
+        +findByPost(Post): List~Comment~
+    }
+    
+    class Reaction {
+        -Long id
+        -User user
+        -Post post
+        -Comment comment
+        -ReactionType type
+        -LocalDateTime createdAt
+        +addReaction(ReactionRequest): Reaction
+        +removeReaction(Long): void
+        +findByPost(Post): List~Reaction~
+        +findByComment(Comment): List~Reaction~
+    }
+    
+    class Friendship {
+        -Long id
+        -User user1
+        -User user2
+        -LocalDateTime createdAt
+        -FriendshipStatus status
+        +areFriends(User, User): boolean
+        +getFriends(User): List~User~
+    }
+    
+    class FriendRequest {
+        -Long id
+        -User sender
+        -User receiver
+        -LocalDateTime createdAt
+        -RequestStatus status
+        +sendRequest(FriendRequestRequest): FriendRequest
+        +acceptRequest(Long): Friendship
+        +rejectRequest(Long): void
+        +findBySender(User): List~FriendRequest~
+        +findByReceiver(User): List~FriendRequest~
+    }
+    
+    class Group {
+        -Long id
+        -String name
+        -String description
+        -User creator
+        -LocalDateTime createdAt
+        -boolean isPrivate
+        -List~GroupMember~ members
+        +createGroup(GroupRequest): Group
+        +updateGroup(Long, GroupRequest): Group
+        +deleteGroup(Long): void
+        +findByCreator(User): List~Group~
+        +findPublicGroups(): List~Group~
+    }
+    
+    class GroupMember {
+        -Long id
+        -User user
+        -Group group
+        -GroupRole role
+        -LocalDateTime joinedAt
+        +addMember(GroupMemberRequest): GroupMember
+        +removeMember(Long): void
+        +updateRole(Long, GroupRole): GroupMember
+        +findByGroup(Group): List~GroupMember~
+        +findByUser(User): List~GroupMember~
+    }
+    
+    class Message {
+        -Long id
+        -User sender
+        -User receiver
+        -String content
+        -LocalDateTime sentAt
+        -boolean isRead
+        -List~String~ attachments
+        +sendMessage(MessageRequest): Message
+        +markAsRead(Long): Message
+        +deleteMessage(Long): void
+        +findConversation(User, User): List~Message~
+        +findUnreadMessages(User): List~Message~
+    }
+    
+    class UserService {
+        +register(UserRegistrationRequest): User
+        +authenticate(LoginRequest): JwtResponse
+        +updateProfile(Long, UserProfileRequest): User
+        +getUserProfile(Long): UserResponse
+        +deactivateAccount(Long): void
+        +searchUsers(String): List~UserResponse~
+    }
+    
+    class PostService {
+        +createPost(Long, PostRequest): Post
+        +updatePost(Long, Long, PostRequest): Post
+        +deletePost(Long, Long): void
+        +getPost(Long): PostResponse
+        +getFeedPosts(Long): List~PostResponse~
+        +getUserPosts(Long): List~PostResponse~
+    }
+    
+    class FriendshipService {
+        +sendFriendRequest(Long, Long): FriendRequest
+        +acceptFriendRequest(Long, Long): Friendship
+        +rejectFriendRequest(Long, Long): void
+        +removeFriend(Long, Long): void
+        +getFriends(Long): List~UserResponse~
+        +getFriendRequests(Long): List~FriendRequestResponse~
+    }
+    
+    class MessageService {
+        +sendMessage(Long, Long, MessageRequest): Message
+        +getConversation(Long, Long): List~MessageResponse~
+        +markAsRead(Long, Long): void
+        +deleteMessage(Long, Long): void
+        +getUnreadMessages(Long): List~MessageResponse~
+    }
+    
+    class AdminService {
+        +getAllUsers(): List~UserResponse~
+        +deactivateUser(Long): void
+        +activateUser(Long): void
+        +deletePost(Long): void
+        +deleteComment(Long): void
+    }
+
+    User "1" -- "many" Post: creates
+    User "1" -- "many" Comment: writes
+    User "1" -- "many" Reaction: makes
+    Post "1" -- "many" Comment: has
+    Post "1" -- "many" Reaction: has
+    Comment "1" -- "many" Reaction: has
+    Comment "1" -- "many" Comment: has replies
+    User "many" -- "many" User: friends
+    User "1" -- "many" FriendRequest: sends
+    User "1" -- "many" FriendRequest: receives
+    User "1" -- "many" Group: creates
+    User "many" -- "many" Group: joins
+    Group "1" -- "many" GroupMember: has
+    User "1" -- "many" GroupMember: is
+    User "1" -- "many" Message: sends
+    User "1" -- "many" Message: receives
