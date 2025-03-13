@@ -1,8 +1,8 @@
 # Simple Social Platform
 
-REST API dla prostej platformy społecznościowej umożliwiającej zarządzanie znajomymi, grupami, udostępnianie wiadomości, komentarze i reakcje.
+REST API for a simple social platform enabling friend management, groups, messaging, comments, and reactions.
 
-## Technologie
+## Technologies
 
 - Java 17
 - Spring Boot 3.2.x
@@ -12,54 +12,54 @@ REST API dla prostej platformy społecznościowej umożliwiającej zarządzanie 
 - MySQL 8.0
 - Maven
 
-## Funkcjonalności
+## Features
 
-### Zarządzanie użytkownikami
-- Rejestracja użytkownika
-- Logowanie i uwierzytelnianie za pomocą JWT
-- Aktualizacja profilu użytkownika
-- Wyszukiwanie użytkowników
+### User Management
+- User registration
+- Login and authentication using JWT
+- User profile updates
+- User search
 
-### Zarządzanie znajomymi
-- Wysyłanie zaproszeń do znajomych
-- Akceptacja/odrzucanie zaproszeń
-- Wyświetlanie listy znajomych
-- Usuwanie znajomych
+### Friend Management
+- Sending friend requests
+- Accepting/rejecting requests
+- Viewing friend lists
+- Removing friends
 
-### Posty i interakcje
-- Tworzenie, edycja i usuwanie postów
-- Dodawanie komentarzy do postów
-- Dodawanie reakcji (polubienia itp.)
-- Wyświetlanie feedu z postami znajomych
+### Posts and Interactions
+- Creating, editing, and deleting posts
+- Adding comments to posts
+- Adding reactions (likes, etc.)
+- Displaying a feed with friends' posts
 
-### Wiadomości
-- Wysyłanie prywatnych wiadomości do znajomych
-- Wyświetlanie historii konwersacji
-- Oznaczanie wiadomości jako przeczytane
-- Usuwanie wiadomości
+### Messages
+- Sending private messages to friends
+- Viewing conversation history
+- Marking messages as read
+- Deleting messages
 
-### Grupy
-- Tworzenie i zarządzanie grupami
-- Dołączanie do grup
-- Publiczne i prywatne grupy
-- Zarządzanie członkami grupy i ich rolami
+### Groups
+- Creating and managing groups
+- Joining groups
+- Public and private groups
+- Managing group members and their roles
 
-### Panel administratora
-- Zarządzanie użytkownikami (blokowanie/odblokowywanie)
-- Moderacja treści (usuwanie postów/komentarzy)
-- Zarządzanie grupami
+### Admin Panel
+- User management (blocking/unblocking)
+- Content moderation (removing posts/comments)
+- Group management
 
-## Uruchomienie projektu
+## Project Setup
 
-### Wymagania
+### Requirements
 
 - Java 17
 - MySQL 8.0
 - Maven
 
-### Konfiguracja bazy danych
+### Database Configuration
 
-1. Utwórz bazę danych MySQL:
+1. Create a MySQL database:
 
 ```sql
 CREATE DATABASE simplesocial;
@@ -68,66 +68,59 @@ GRANT ALL PRIVILEGES ON simplesocial.* TO 'socialuser'@'localhost';
 FLUSH PRIVILEGES;
 ```
 
-2. Skonfiguruj połączenia w pliku `application.properties`
+2. Configure connections in the `application.properties` file
 
-### Budowanie i uruchamianie
+### Building and Running
 
 ```bash
-# Klonowanie repozytorium
+# Clone the repository
 git clone https://github.com/username/simple-social-platform.git
 cd simple-social-platform
 
-# Budowanie projektu
+# Build the project
 mvn clean install
 
-# Uruchamianie aplikacji
+# Run the application
 java -jar target/simple-social-platform-0.0.1-SNAPSHOT.jar
 ```
 
-Alternatywnie, można uruchomić aplikację bezpośrednio za pomocą Maven:
+Alternatively, you can run the application directly using Maven:
 
 ```bash
 mvn spring-boot:run
 ```
 
-Aplikacja domyślnie uruchomi się pod adresem: http://localhost:8080
+The application will run by default at: http://localhost:8080
 
-### Profile uruchomieniowe
+### Runtime Profiles
 
-Aplikacja posiada dwa profile uruchomieniowe:
-- `dev` - do lokalnego developmentu (domyślny)
-- `prod` - do środowiska produkcyjnego
+The application has two runtime profiles:
+- `dev` - for local development (default)
+- `prod` - for production environment
 
 ```bash
-# Uruchomienie z profilem produkcyjnym
+# Running with production profile
 java -jar target/simple-social-platform-0.0.1-SNAPSHOT.jar --spring.profiles.active=prod
 ```
 
-## API Documentation
+## REST API Endpoints
 
-Po uruchomieniu aplikacji, dokumentacja API dostępna jest pod adresem:
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- OpenAPI JSON: http://localhost:8080/v3/api-docs
+### Authentication
+- `POST /api/auth/register` - Register a new user
+- `POST /api/auth/login` - User login
+- `POST /api/auth/refresh` - Refresh JWT token
 
-## Endpointy REST API
+### Users
+- `GET /api/users` - Search users
+- `GET /api/users/{id}` - Get user details
+- `PUT /api/users/{id}` - Update user profile
+- `DELETE /api/users/{id}` - Deactivate account
 
-### Autentykacja
-- `POST /api/auth/register` - Rejestracja nowego użytkownika
-- `POST /api/auth/login` - Logowanie użytkownika
-- `POST /api/auth/refresh` - Odświeżanie tokenu JWT
-
-### Użytkownicy
-- `GET /api/users` - Wyszukiwanie użytkowników
-- `GET /api/users/{id}` - Pobieranie szczegółów użytkownika
-- `PUT /api/users/{id}` - Aktualizacja profilu użytkownika
-- `DELETE /api/users/{id}` - Dezaktywacja konta
-
-### Posty
-- `GET /api/posts` - Pobieranie postów z feeda
-- `GET /api/posts/{id}` - Pobieranie szczegółów posta
-- `POST /api/posts` - Tworzenie nowego posta
-- `PUT /api/posts/{id}` - Aktualizacja posta
-- `
+### Posts
+- `GET /api/posts` - Get posts from feed
+- `GET /api/posts/{id}` - Get post details
+- `POST /api/posts` - Create a new post
+- `PUT /api/posts/{id}` - Update a post
 
 ```
 simple-social-platform/
@@ -138,8 +131,7 @@ simple-social-platform/
 │   │   │       └── simplesocial/
 │   │   │           ├── config/
 │   │   │           │   ├── SecurityConfig.java
-│   │   │           │   ├── WebConfig.java
-│   │   │           │   └── SwaggerConfig.java
+│   │   │           │   └── WebConfig.java
 │   │   │           ├── controller/
 │   │   │           │   ├── AuthController.java
 │   │   │           │   ├── UserController.java
