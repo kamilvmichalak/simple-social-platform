@@ -18,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "groups")
+@Table(name = "social_groups")
 @EntityListeners(AuditingEntityListener.class)
 public class Group {
     @Id
