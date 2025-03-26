@@ -36,8 +36,8 @@ public class MessageServiceImpl implements MessageService {
         if (messageDetails.getContent() != null) {
             message.setContent(messageDetails.getContent());
         }
-        if (messageDetails.getIsRead() != message.getIsRead()) {
-            message.setIsRead(messageDetails.getIsRead());
+        if (messageDetails.isReadable() != message.isReadable()) {
+            message.setReadable(messageDetails.isReadable());
         }
 
         return messageRepository.save(message);

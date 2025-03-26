@@ -29,7 +29,7 @@ public class Message {
     private User receiver;
 
     @Column(nullable = false)
-    private boolean isRead = false;
+    private boolean readable = false;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)
@@ -48,13 +48,5 @@ public class Message {
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
-    }
-
-    public boolean getIsRead() {
-        return isRead;
-    }
-
-    public void setIsRead(boolean isRead) {
-        this.isRead = isRead;
     }
 }
