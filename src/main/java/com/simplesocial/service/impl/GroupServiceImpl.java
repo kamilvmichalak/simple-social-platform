@@ -2,8 +2,11 @@ package com.simplesocial.service.impl;
 
 import com.simplesocial.entity.Group;
 import com.simplesocial.entity.User;
+import com.simplesocial.entity.GroupMember;
+import com.simplesocial.entity.GroupRole;
 import com.simplesocial.exception.ResourceNotFoundException;
 import com.simplesocial.repository.GroupRepository;
+import com.simplesocial.repository.GroupMemberRepository;
 import com.simplesocial.service.GroupService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService {
     private final GroupRepository groupRepository;
+    private final GroupMemberRepository groupMemberRepository;
 
     @Override
     @Transactional
@@ -69,5 +73,26 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Page<Group> findUserGroups(User user, Pageable pageable) {
         return groupRepository.findUserGroups(user, pageable);
+    }
+
+    @Override
+    @Transactional
+    public GroupMember addMember(GroupMember member) {
+        return groupMemberRepository.save(member);
+    }
+
+    @Override
+    @Transactional
+    public void removeMember(Long memberId) {
+        groupMemberRepository.deleteById(memberId);
+    }
+
+    @Override
+    @Transactional
+    public GroupMember updateMemberRole(Long memberId, GroupRole role) {
+        GroupMember member = groupMemberRepository.findById(memberId)
+                .orElseThrow(() -> new ResourceNotFoundException("GroupMember not found with id: " + memberId));
+        member.setRole(role);
+        return groupMemberRepository.save(member);
     }
 }
