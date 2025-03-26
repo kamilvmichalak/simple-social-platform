@@ -1,0 +1,6 @@
+{
+  // This setting controls how VS Code's Java extension handles Maven/Gradle configuration updates
+  // When set to "interactive", it will prompt you before updating the build configuration
+  // You can modify this setting based on your preference
+  "java.configuration.updateBuildConfiguration": "interactive"
+}

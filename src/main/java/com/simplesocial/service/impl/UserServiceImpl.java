@@ -90,4 +90,25 @@ public class UserServiceImpl implements UserService {
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
     }
+
+    @Override
+    @Transactional
+    public void activateUser(Long id) {
+        User user = findById(id);
+        user.setEnabled(true);
+        userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public void deactivateUser(Long id) {
+        User user = findById(id);
+        user.setEnabled(false);
+        userRepository.save(user);
+    }
+
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
+    }
 }

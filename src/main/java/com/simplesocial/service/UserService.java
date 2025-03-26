@@ -7,15 +7,21 @@ import org.springframework.data.domain.Pageable;
 public interface UserService {
     User registerUser(User user);
 
+    User findById(Long id);
+
     User findByUsername(String username);
 
     User findByEmail(String email);
 
-    User findById(Long id);
-
     User updateUser(Long id, User userDetails);
 
     void deleteUser(Long id);
+
+    void activateUser(Long id);
+
+    void deactivateUser(Long id);
+
+    Page<User> findAll(Pageable pageable);
 
     Page<User> searchUsers(String query, Pageable pageable);
 
