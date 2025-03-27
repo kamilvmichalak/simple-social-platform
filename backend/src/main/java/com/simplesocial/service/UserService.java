@@ -1,11 +1,12 @@
 package com.simplesocial.service;
 
+import com.simplesocial.dto.request.RegisterRequest;
 import com.simplesocial.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface UserService {
-    User registerUser(User user);
+    User registerUser(RegisterRequest registerRequest);
 
     User findById(Long id);
 
