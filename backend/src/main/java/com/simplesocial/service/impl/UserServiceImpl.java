@@ -1,7 +1,11 @@
 package com.simplesocial.service.impl;
 
+import com.simplesocial.dto.request.RegisterRequest;
+import com.simplesocial.entity.ERole;
+import com.simplesocial.entity.Role;
 import com.simplesocial.entity.User;
 import com.simplesocial.exception.ResourceNotFoundException;
+import com.simplesocial.repository.RoleRepository;
 import com.simplesocial.repository.UserRepository;
 import com.simplesocial.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -11,22 +15,30 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional
-    public User registerUser(User user) {
-        if (existsByUsername(user.getUsername())) {
-            throw new IllegalArgumentException("Username already exists");
-        }
-        if (existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+    public User registerUser(RegisterRequest registerRequest) {
+        User user = new User();
+        user.setUsername(registerRequest.getUsername());
+        user.setEmail(registerRequest.getEmail());
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+
+        Set<Role> roles = new HashSet<>();
+        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+        roles.add(userRole);
+        user.setRoles(roles);
+
         return userRepository.save(user);
     }
 
