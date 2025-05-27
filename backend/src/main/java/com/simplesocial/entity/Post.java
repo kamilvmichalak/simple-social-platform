@@ -69,4 +69,14 @@ public class Post {
     public void setIsPublic(boolean isPublic) {
         this.isPublic = isPublic;
     }
+
+    @Transient
+    public Long getLikesCount() {
+        return 0L; // TODO: Implement actual count
+    }
+
+    @Transient
+    public Long getCommentsCount() {
+        return 0L; // TODO: Implement actual count
+    }
 }

@@ -50,18 +50,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<ApiResponse<Void>> registerUser(@Valid @RequestBody RegisterRequest registerRequest) {
         if (userService.existsByUsername(registerRequest.getUsername())) {
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, "Username is already taken!"));
+                    .body(new ApiResponse<>(false, "Username is already taken!"));
         }
 
         if (userService.existsByEmail(registerRequest.getEmail())) {
             return ResponseEntity.badRequest()
-                    .body(new ApiResponse(false, "Email is already in use!"));
+                    .body(new ApiResponse<>(false, "Email is already in use!"));
         }
 
         userService.registerUser(registerRequest);
-        return ResponseEntity.ok(new ApiResponse(true, "User registered successfully!"));
+        return ResponseEntity.ok(new ApiResponse<>(true, "User registered successfully!"));
     }
 }

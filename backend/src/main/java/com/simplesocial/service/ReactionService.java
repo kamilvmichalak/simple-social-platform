@@ -1,21 +1,17 @@
 package com.simplesocial.service;
 
-import com.simplesocial.entity.Post;
-import com.simplesocial.entity.Reaction;
+import com.simplesocial.dto.request.ReactionRequest;
+import com.simplesocial.dto.response.ReactionResponse;
 import com.simplesocial.entity.User;
 
-import java.util.Optional;
-
 public interface ReactionService {
-    Reaction createReaction(Reaction reaction);
+    ReactionResponse createReaction(Long postId, ReactionRequest request, User user);
 
-    Reaction findById(Long id);
+    ReactionResponse findById(Long id);
 
-    Optional<Reaction> findByUserAndPost(User user, Post post);
+    void deleteReaction(Long id, User user);
 
-    void deleteReaction(Long id);
+    ReactionResponse findByUserAndPostId(User user, Long postId);
 
-    boolean existsByUserAndPost(User user, Post post);
-
-    long countByPost(Post post);
+    Long countByPostId(Long postId);
 }

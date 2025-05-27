@@ -7,9 +7,11 @@ import java.time.LocalDateTime;
 public class PostResponse {
     private Long id;
     private String content;
-    private UserResponse author;
+    private String imageUrl;
+    private boolean public_;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private int likeCount;
-    private int commentCount;
+    private UserResponse author;
+    private Long likesCount;
+    private Long commentsCount;
 }

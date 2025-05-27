@@ -2,6 +2,7 @@ package com.simplesocial.service.impl;
 
 import com.simplesocial.dto.request.PostRequest;
 import com.simplesocial.dto.response.PostResponse;
+import com.simplesocial.dto.response.UserResponse;
 import com.simplesocial.entity.Post;
 import com.simplesocial.entity.User;
 import com.simplesocial.exception.ResourceNotFoundException;
@@ -105,10 +106,10 @@ public class PostServiceImpl implements PostService {
         response.setId(post.getId());
         response.setContent(post.getContent());
         response.setImageUrl(post.getImageUrl());
-        response.setIsPublic(post.getIsPublic());
+        response.setPublic_(post.getIsPublic());
         response.setCreatedAt(post.getCreatedAt());
         response.setUpdatedAt(post.getUpdatedAt());
-        response.setAuthor(post.getAuthor());
+        response.setAuthor(UserResponse.fromUser(post.getAuthor()));
         response.setLikesCount(post.getLikesCount());
         response.setCommentsCount(post.getCommentsCount());
         return response;
