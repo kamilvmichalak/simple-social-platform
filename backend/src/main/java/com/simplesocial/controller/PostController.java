@@ -3,9 +3,7 @@ package com.simplesocial.controller;
 import com.simplesocial.dto.request.PostRequest;
 import com.simplesocial.dto.response.ApiResponse;
 import com.simplesocial.dto.response.PostResponse;
-import com.simplesocial.entity.FriendshipStatus;
 import com.simplesocial.entity.User;
-import com.simplesocial.service.FriendshipService;
 import com.simplesocial.service.PostService;
 import com.simplesocial.service.UserService;
 import jakarta.validation.Valid;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 public class PostController {
     private final PostService postService;
     private final UserService userService;
-    private final FriendshipService friendshipService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostResponse>> createPost(
