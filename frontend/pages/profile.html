@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile - Simple Social Platform</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <a href="feed.html">Simple Social</a>
+      </div>
+      <div class="navbar-menu">
+        <a href="feed.html" class="nav-item">Feed</a>
+        <a href="profile.html" class="nav-item">Profile</a>
+        <a href="messages.html" class="nav-item">Messages</a>
+        <a href="groups.html" class="nav-item">Groups</a>
+      </div>
+      <div class="user-menu">
+        <img src="../assets/default-avatar.png" alt="Profile" class="avatar" />
+        <div class="dropdown-menu">
+          <a href="profile.html">My Profile</a>
+          <a href="settings.html">Settings</a>
+          <a href="#" id="logout">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="profile-container">
+        <div class="profile-header">
+          <div class="profile-cover"></div>
+          <div class="profile-info">
+            <img
+              src="../assets/default-avatar.png"
+              alt="Profile Picture"
+              class="profile-picture"
+            />
+            <div class="profile-details">
+              <h2 id="profile-username">Username</h2>
+              <p id="profile-email">email@example.com</p>
+              <div class="profile-stats">
+                <div class="stat">
+                  <span class="stat-value" id="posts-count">0</span>
+                  <span class="stat-label">Posts</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-value" id="friends-count">0</span>
+                  <span class="stat-label">Friends</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-content">
+          <div class="profile-posts">
+            <h3>My Posts</h3>
+            <div id="user-posts" class="posts-feed">
+              <!-- Posts will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <h3>About</h3>
+          <p id="profile-bio">No bio yet</p>
+        </div>
+        <div class="sidebar-section">
+          <h3>Friends</h3>
+          <div id="friends-list" class="friends-list">
+            <!-- Friends will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/profile.js"></script>
+  </body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Messages - Simple Social Platform</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <a href="feed.html">Simple Social</a>
+      </div>
+      <div class="navbar-menu">
+        <a href="feed.html" class="nav-item">Feed</a>
+        <a href="profile.html" class="nav-item">Profile</a>
+        <a href="messages.html" class="nav-item">Messages</a>
+        <a href="groups.html" class="nav-item">Groups</a>
+      </div>
+      <div class="user-menu">
+        <img src="../assets/default-avatar.png" alt="Profile" class="avatar" />
+        <div class="dropdown-menu">
+          <a href="profile.html">My Profile</a>
+          <a href="settings.html">Settings</a>
+          <a href="#" id="logout">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="messages-container">
+        <div class="conversations-list">
+          <div class="search-box">
+            <input
+              type="text"
+              placeholder="Search conversations..."
+              id="conversation-search"
+            />
+          </div>
+          <div id="conversations">
+            <!-- Conversations will be loaded here -->
+          </div>
+        </div>
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="chat-user-info">
+              <img
+                src="../assets/default-avatar.png"
+                alt="Profile"
+                class="avatar"
+              />
+              <div>
+                <h3 id="chat-username">Select a conversation</h3>
+                <span id="chat-status">offline</span>
+              </div>
+            </div>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be loaded here -->
+          </div>
+          <div class="chat-input">
+            <form id="message-form">
+              <input type="text" placeholder="Type a message..." required />
+              <button type="submit" class="btn">Send</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/messages.js"></script>
+  </body>
+</html>
