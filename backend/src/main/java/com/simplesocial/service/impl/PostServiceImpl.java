@@ -1,8 +1,11 @@
 package com.simplesocial.service.impl;
 
+import com.simplesocial.dto.request.PostRequest;
+import com.simplesocial.dto.response.PostResponse;
 import com.simplesocial.entity.Post;
 import com.simplesocial.entity.User;
 import com.simplesocial.exception.ResourceNotFoundException;
+import com.simplesocial.exception.UnauthorizedException;
 import com.simplesocial.repository.PostRepository;
 import com.simplesocial.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -18,58 +21,96 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public Post createPost(Post post) {
-        return postRepository.save(post);
+    public PostResponse createPost(PostRequest postRequest, User currentUser) {
+        Post post = new Post();
+        post.setContent(postRequest.getContent());
+        post.setImageUrl(postRequest.getImageUrl());
+        post.setIsPublic(postRequest.getIsPublic());
+        post.setAuthor(currentUser);
+
+        Post savedPost = postRepository.save(post);
+        return mapToResponse(savedPost);
     }
 
     @Override
-    public Post findById(Long id) {
-        return postRepository.findById(id)
+    public PostResponse findById(Long id) {
+        Post post = postRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
+        return mapToResponse(post);
     }
 
     @Override
     @Transactional
-    public Post updatePost(Long id, Post postDetails) {
-        Post post = findById(id);
+    public PostResponse updatePost(Long id, PostRequest postRequest, User currentUser) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
 
-        if (postDetails.getContent() != null) {
-            post.setContent(postDetails.getContent());
-        }
-        if (postDetails.getImageUrl() != null) {
-            post.setImageUrl(postDetails.getImageUrl());
-        }
-        if (postDetails.getIsPublic() != post.getIsPublic()) {
-            post.setIsPublic(postDetails.getIsPublic());
+        if (!post.getAuthor().equals(currentUser)) {
+            throw new UnauthorizedException("You are not authorized to update this post");
         }
 
-        return postRepository.save(post);
+        if (postRequest.getContent() != null) {
+            post.setContent(postRequest.getContent());
+        }
+        if (postRequest.getImageUrl() != null) {
+            post.setImageUrl(postRequest.getImageUrl());
+        }
+        if (postRequest.getIsPublic() != null) {
+            post.setIsPublic(postRequest.getIsPublic());
+        }
+
+        Post updatedPost = postRepository.save(post);
+        return mapToResponse(updatedPost);
     }
 
     @Override
     @Transactional
-    public void deletePost(Long id) {
-        Post post = findById(id);
+    public void deletePost(Long id, User currentUser) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found with id: " + id));
+
+        if (!post.getAuthor().equals(currentUser)) {
+            throw new UnauthorizedException("You are not authorized to delete this post");
+        }
+
         postRepository.delete(post);
     }
 
     @Override
-    public Page<Post> findByAuthor(User author, Pageable pageable) {
-        return postRepository.findByAuthor(author, pageable);
+    public Page<PostResponse> findByAuthor(User author, Pageable pageable) {
+        return postRepository.findByAuthor(author, pageable)
+                .map(this::mapToResponse);
     }
 
     @Override
-    public Page<Post> findFriendsPosts(Iterable<User> friends, Pageable pageable) {
-        return postRepository.findFriendsPosts(friends, pageable);
+    public Page<PostResponse> findFriendsPosts(User currentUser, Pageable pageable) {
+        return postRepository.findFriendsPosts(currentUser, pageable)
+                .map(this::mapToResponse);
     }
 
     @Override
-    public Page<Post> findByGroupId(Long groupId, Pageable pageable) {
-        return postRepository.findByGroupId(groupId, pageable);
+    public Page<PostResponse> findByGroupId(Long groupId, Pageable pageable) {
+        return postRepository.findByGroupId(groupId, pageable)
+                .map(this::mapToResponse);
     }
 
     @Override
-    public Page<Post> findPublicPosts(Pageable pageable) {
-        return postRepository.findPublicPosts(pageable);
+    public Page<PostResponse> findPublicPosts(Pageable pageable) {
+        return postRepository.findPublicPosts(pageable)
+                .map(this::mapToResponse);
+    }
+
+    private PostResponse mapToResponse(Post post) {
+        PostResponse response = new PostResponse();
+        response.setId(post.getId());
+        response.setContent(post.getContent());
+        response.setImageUrl(post.getImageUrl());
+        response.setIsPublic(post.getIsPublic());
+        response.setCreatedAt(post.getCreatedAt());
+        response.setUpdatedAt(post.getUpdatedAt());
+        response.setAuthor(post.getAuthor());
+        response.setLikesCount(post.getLikesCount());
+        response.setCommentsCount(post.getCommentsCount());
+        return response;
     }
 }
