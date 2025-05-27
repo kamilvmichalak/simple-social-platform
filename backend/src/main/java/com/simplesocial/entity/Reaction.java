@@ -18,8 +18,9 @@ public class Reaction {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "post_id")
-    private Long postId;
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
