@@ -3,10 +3,12 @@ package com.simplesocial.service.impl;
 import com.simplesocial.dto.request.ReactionRequest;
 import com.simplesocial.dto.response.ReactionResponse;
 import com.simplesocial.dto.response.UserResponse;
+import com.simplesocial.entity.Post;
 import com.simplesocial.entity.Reaction;
 import com.simplesocial.entity.ReactionType;
 import com.simplesocial.entity.User;
 import com.simplesocial.exception.ResourceNotFoundException;
+import com.simplesocial.repository.PostRepository;
 import com.simplesocial.repository.ReactionRepository;
 import com.simplesocial.service.ReactionService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ReactionServiceImpl implements ReactionService {
     private final ReactionRepository reactionRepository;
+    private final PostRepository postRepository;
 
     @Override
     @Transactional
@@ -24,7 +27,9 @@ public class ReactionServiceImpl implements ReactionService {
         Reaction reaction = new Reaction();
         reaction.setType(ReactionType.valueOf(request.getType().toUpperCase()));
         reaction.setUser(user);
-        reaction.setPostId(postId);
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResourceNotFoundException("Post not found"));
+        reaction.setPost(post);
         return mapToResponse(reactionRepository.save(reaction));
     }
 
@@ -62,7 +67,7 @@ public class ReactionServiceImpl implements ReactionService {
         response.setId(reaction.getId());
         response.setType(reaction.getType().name());
         response.setUser(UserResponse.fromUser(reaction.getUser()));
-        response.setPostId(reaction.getPostId());
+        response.setPostId(reaction.getPost().getId());
         response.setCreatedAt(reaction.getCreatedAt());
         return response;
     }
