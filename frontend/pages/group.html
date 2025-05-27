@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Group - Simple Social Platform</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <a href="feed.html">Simple Social</a>
+      </div>
+      <div class="navbar-menu">
+        <a href="feed.html" class="nav-item">Feed</a>
+        <a href="profile.html" class="nav-item">Profile</a>
+        <a href="messages.html" class="nav-item">Messages</a>
+        <a href="groups.html" class="nav-item">Groups</a>
+      </div>
+      <div class="user-menu">
+        <img src="../assets/default-avatar.png" alt="Profile" class="avatar" />
+        <div class="dropdown-menu">
+          <a href="profile.html">My Profile</a>
+          <a href="settings.html">Settings</a>
+          <a href="#" id="logout">Logout</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container">
+      <div class="group-container">
+        <div class="group-header">
+          <div class="group-cover"></div>
+          <div class="group-info">
+            <h1 id="group-name">Group Name</h1>
+            <p id="group-description">Group description goes here</p>
+            <div class="group-meta">
+              <span id="group-members-count">0 members</span>
+              <span id="group-privacy">Public</span>
+            </div>
+            <div class="group-actions">
+              <button class="btn" id="join-group-btn">Join Group</button>
+              <button class="btn btn-secondary" id="invite-btn">Invite</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="group-content">
+          <div class="group-posts">
+            <div class="create-post">
+              <form id="group-post-form">
+                <textarea
+                  placeholder="Write something to the group..."
+                  required
+                ></textarea>
+                <div class="post-actions">
+                  <input type="file" id="post-image" accept="image/*" />
+                  <button type="submit" class="btn">Post</button>
+                </div>
+              </form>
+            </div>
+            <div id="group-posts" class="posts-feed">
+              <!-- Posts will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <h3>About</h3>
+          <p id="group-about">No description available</p>
+        </div>
+        <div class="sidebar-section">
+          <h3>Members</h3>
+          <div id="group-members" class="members-list">
+            <!-- Members will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invite Modal -->
+    <div class="modal" id="invite-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Invite to Group</h3>
+          <button class="close-btn">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div class="search-box">
+            <input
+              type="text"
+              placeholder="Search users..."
+              id="invite-search"
+            />
+          </div>
+          <div id="invite-results" class="invite-results">
+            <!-- Search results will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/group.js"></script>
+  </body>
+</html>

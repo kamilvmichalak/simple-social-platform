@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feed - Simple Social Platform</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <div id="navbar-container"></div>
+
+    <div class="container">
+      <div class="feed-container">
+        <!-- Create Post Section -->
+        <div class="create-post">
+          <form id="createPostForm" class="post-form">
+            <textarea
+              id="postContent"
+              placeholder="What's on your mind?"
+              required
+            ></textarea>
+            <div class="post-actions">
+              <input type="file" id="postImage" accept="image/*" />
+              <button type="submit" class="btn btn-primary">Post</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Posts Feed -->
+        <div id="postsFeed" class="posts-feed">
+          <!-- Posts will be dynamically loaded here -->
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <div class="sidebar-section">
+          <h3>Trending Topics</h3>
+          <div id="trendingTopics" class="trending-topics">
+            <!-- Trending topics will be loaded here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/feed.js"></script>
+  </body>
+</html>
