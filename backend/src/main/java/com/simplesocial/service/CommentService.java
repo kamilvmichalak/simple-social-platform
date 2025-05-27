@@ -1,21 +1,21 @@
 package com.simplesocial.service;
 
-import com.simplesocial.entity.Comment;
-import com.simplesocial.entity.Post;
+import com.simplesocial.dto.request.CommentRequest;
+import com.simplesocial.dto.response.CommentResponse;
 import com.simplesocial.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface CommentService {
-    Comment createComment(Comment comment);
+    CommentResponse createComment(Long postId, CommentRequest commentRequest, User currentUser);
 
-    Comment findById(Long id);
+    CommentResponse findById(Long id);
 
-    Comment updateComment(Long id, Comment commentDetails);
+    CommentResponse updateComment(Long id, CommentRequest commentRequest, User currentUser);
 
-    void deleteComment(Long id);
+    void deleteComment(Long id, User currentUser);
 
-    Page<Comment> findByPost(Post post, Pageable pageable);
+    Page<CommentResponse> findByPostId(Long postId, Pageable pageable);
 
-    Page<Comment> findByAuthor(User author, Pageable pageable);
+    Page<CommentResponse> findByAuthor(User author, Pageable pageable);
 }

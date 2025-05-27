@@ -1,24 +1,25 @@
 package com.simplesocial.service;
 
-import com.simplesocial.entity.Post;
+import com.simplesocial.dto.request.PostRequest;
+import com.simplesocial.dto.response.PostResponse;
 import com.simplesocial.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PostService {
-    Post createPost(Post post);
+    PostResponse createPost(PostRequest postRequest, User currentUser);
 
-    Post findById(Long id);
+    PostResponse findById(Long id);
 
-    Post updatePost(Long id, Post postDetails);
+    PostResponse updatePost(Long id, PostRequest postRequest, User currentUser);
 
-    void deletePost(Long id);
+    void deletePost(Long id, User currentUser);
 
-    Page<Post> findByAuthor(User author, Pageable pageable);
+    Page<PostResponse> findByAuthor(User author, Pageable pageable);
 
-    Page<Post> findFriendsPosts(Iterable<User> friends, Pageable pageable);
+    Page<PostResponse> findFriendsPosts(User currentUser, Pageable pageable);
 
-    Page<Post> findByGroupId(Long groupId, Pageable pageable);
+    Page<PostResponse> findByGroupId(Long groupId, Pageable pageable);
 
-    Page<Post> findPublicPosts(Pageable pageable);
+    Page<PostResponse> findPublicPosts(Pageable pageable);
 }
