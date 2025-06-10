@@ -73,4 +73,38 @@ if (registerForm) {
             alert('An error occurred during registration');
         }
     });
-} 
+}
+
+// Check authentication status and update UI
+function checkAuthStatus() {
+    const token = localStorage.getItem('token');
+    const navLinks = document.querySelector('.nav-links');
+    
+    if (token) {
+        navLinks.innerHTML = `
+            <a href="index.html">Home</a>
+            <a href="pages/feed.html">Feed</a>
+            <a href="pages/profile.html">Profile</a>
+            <a href="pages/messages.html">Messages</a>
+            <a href="pages/groups.html">Groups</a>
+            <a href="#" id="logoutBtn">Logout</a>
+        `;
+        
+        // Add logout handler
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = '/index.html';
+        });
+    } else {
+        navLinks.innerHTML = `
+            <a href="index.html">Home</a>
+            <a href="pages/auth/login.html">Login</a>
+            <a href="pages/auth/register.html">Register</a>
+        `;
+    }
+}
+
+// Call checkAuthStatus when page loads
+document.addEventListener('DOMContentLoaded', checkAuthStatus); 
