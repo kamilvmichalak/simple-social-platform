@@ -7,54 +7,16 @@
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <nav class="navbar">
-      <div class="navbar-brand">
-        <a href="feed.html">Simple Social</a>
-      </div>
-      <div class="navbar-menu">
-        <a href="feed.html" class="nav-item">Feed</a>
-        <a href="profile.html" class="nav-item">Profile</a>
-        <a href="messages.html" class="nav-item">Messages</a>
-        <a href="groups.html" class="nav-item">Groups</a>
-      </div>
-      <div class="user-menu">
-        <img src="../assets/default-avatar.png" alt="Profile" class="avatar" />
-        <div class="dropdown-menu">
-          <a href="profile.html">My Profile</a>
-          <a href="settings.html">Settings</a>
-          <a href="#" id="logout">Logout</a>
-        </div>
-      </div>
-    </nav>
+    <div id="navbar-container"></div>
 
     <div class="container">
       <div class="groups-container">
         <div class="groups-header">
-          <h2>Groups</h2>
-          <button class="btn" id="create-group-btn">Create Group</button>
+          <h2>My Groups</h2>
+          <button class="btn" id="create-group-btn">Create New Group</button>
         </div>
-
-        <div class="groups-search">
-          <input type="text" placeholder="Search groups..." id="group-search" />
-        </div>
-
         <div class="groups-list" id="groups-list">
           <!-- Groups will be loaded here -->
-        </div>
-      </div>
-
-      <div class="sidebar">
-        <div class="sidebar-section">
-          <h3>My Groups</h3>
-          <div id="my-groups" class="my-groups-list">
-            <!-- User's groups will be loaded here -->
-          </div>
-        </div>
-        <div class="sidebar-section">
-          <h3>Suggested Groups</h3>
-          <div id="suggested-groups" class="suggested-groups-list">
-            <!-- Suggested groups will be loaded here -->
-          </div>
         </div>
       </div>
     </div>
@@ -62,10 +24,7 @@
     <!-- Create Group Modal -->
     <div class="modal" id="create-group-modal">
       <div class="modal-content">
-        <div class="modal-header">
-          <h3>Create New Group</h3>
-          <button class="close-btn">&times;</button>
-        </div>
+        <h3>Create New Group</h3>
         <form id="create-group-form">
           <div class="form-group">
             <label for="group-name">Group Name</label>
@@ -75,19 +34,8 @@
             <label for="group-description">Description</label>
             <textarea id="group-description" required></textarea>
           </div>
-          <div class="form-group">
-            <label for="group-privacy">Privacy</label>
-            <select id="group-privacy" required>
-              <option value="PUBLIC">Public</option>
-              <option value="PRIVATE">Private</option>
-            </select>
-          </div>
           <div class="form-actions">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              id="cancel-create-group"
-            >
+            <button type="button" class="btn btn-secondary" id="cancel-create">
               Cancel
             </button>
             <button type="submit" class="btn">Create Group</button>
@@ -96,6 +44,7 @@
       </div>
     </div>
 
+    <script src="../js/navbar.js"></script>
     <script src="../js/groups.js"></script>
   </body>
 </html>

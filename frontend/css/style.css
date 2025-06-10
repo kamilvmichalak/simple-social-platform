@@ -201,22 +201,44 @@ body {
 
 /* Button Styles */
 .btn {
-    border-radius: 6px;
-    font-size: 1rem;
-    padding: 10px 20px;
+    padding: 8px 16px;
     border: none;
+    border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    font-weight: 500;
+    transition: background-color 0.2s;
 }
 
 .btn-primary {
-    background-color: var(--primary-color);
+    background-color: #007bff;
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: var(--primary-dark);
+    background-color: #0056b3;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 /* Auth Links */
@@ -1123,4 +1145,83 @@ body {
 .nav-links a:hover {
     background-color: var(--hover-background);
     color: black;
+}
+
+/* People Page Styles */
+.people-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.search-section {
+    margin-bottom: 30px;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.user-list {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.user-card {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.user-card .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-info h4 {
+    margin: 0;
+    color: #333;
+}
+
+.user-info p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.user-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.search-results,
+.friend-requests,
+.friends-list {
+    margin-top: 30px;
+}
+
+.search-results h3,
+.friend-requests h3,
+.friends-list h3 {
+    color: #333;
+    margin-bottom: 15px;
 }

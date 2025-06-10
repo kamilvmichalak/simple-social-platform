@@ -41,7 +41,7 @@ async function loadPosts() {
 
 // Display posts in the feed
 function displayPosts(posts) {
-    const feedContainer = document.getElementById('postsFeed');
+    const feedContainer = document.getElementById('posts-feed');
     feedContainer.innerHTML = '';
 
     console.log('Displaying posts:', posts);
@@ -82,10 +82,10 @@ function createPostElement(post) {
         </div>
         <div class="post-actions">
             <button class="btn btn-like" data-post-id="${post.id}">
-                <span class="like-count">${post.likesCount}</span> Likes
+                <span class="like-count">${post.likesCount || 0}</span> Likes
             </button>
             <button class="btn btn-comment" data-post-id="${post.id}">
-                <span class="comment-count">${post.commentsCount}</span> Comments
+                <span class="comment-count">${post.commentsCount || 0}</span> Comments
             </button>
         </div>
         <div class="comments-section" id="comments-${post.id}">
@@ -101,39 +101,16 @@ function createPostElement(post) {
 
 // Setup post form submission
 function setupPostForm() {
-    const form = document.getElementById('createPostForm');
+    const form = document.getElementById('post-form');
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
 
-        const content = document.getElementById('postContent').value;
-        const imageFile = document.getElementById('postImage').files[0];
+        const content = form.querySelector('textarea').value;
 
         try {
             console.log('Creating post with content:', content);
-            // First, if there's an image, upload it
-            let imageUrl = null;
-            if (imageFile) {
-                const imageFormData = new FormData();
-                imageFormData.append('file', imageFile);
-                
-                const imageResponse = await fetch(`${API_URL}/upload`, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${localStorage.getItem('token')}`
-                    },
-                    body: imageFormData
-                });
-                
-                if (imageResponse.ok) {
-                    const imageData = await imageResponse.json();
-                    imageUrl = imageData.data;
-                }
-            }
-
-            // Then create the post with the image URL
             const postData = {
                 content: content,
-                imageUrl: imageUrl,
                 isPublic: true
             };
 

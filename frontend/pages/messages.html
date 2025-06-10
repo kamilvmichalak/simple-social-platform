@@ -7,25 +7,7 @@
     <link rel="stylesheet" href="../css/style.css" />
   </head>
   <body>
-    <nav class="navbar">
-      <div class="navbar-brand">
-        <a href="feed.html">Simple Social</a>
-      </div>
-      <div class="navbar-menu">
-        <a href="feed.html" class="nav-item">Feed</a>
-        <a href="profile.html" class="nav-item">Profile</a>
-        <a href="messages.html" class="nav-item">Messages</a>
-        <a href="groups.html" class="nav-item">Groups</a>
-      </div>
-      <div class="user-menu">
-        <img src="../assets/default-avatar.png" alt="Profile" class="avatar" />
-        <div class="dropdown-menu">
-          <a href="profile.html">My Profile</a>
-          <a href="settings.html">Settings</a>
-          <a href="#" id="logout">Logout</a>
-        </div>
-      </div>
-    </nav>
+    <div id="navbar-container"></div>
 
     <div class="container">
       <div class="messages-container">
@@ -68,6 +50,7 @@
       </div>
     </div>
 
+    <script src="../js/navbar.js"></script>
     <script src="../js/messages.js"></script>
   </body>
 </html>

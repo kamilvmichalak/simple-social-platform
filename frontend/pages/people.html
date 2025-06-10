@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>People - Simple Social Platform</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <div id="navbar-container"></div>
+
+    <div class="container">
+      <div class="people-container">
+        <!-- Search Section -->
+        <div class="search-section">
+          <h2>Find People</h2>
+          <div class="search-box">
+            <input
+              type="text"
+              id="searchInput"
+              placeholder="Search by username or name..."
+            />
+            <button id="searchButton" class="btn btn-primary">Search</button>
+          </div>
+        </div>
+
+        <!-- Search Results -->
+        <div class="search-results">
+          <h3>Search Results</h3>
+          <div id="searchResults" class="user-list">
+            <!-- Search results will be displayed here -->
+          </div>
+        </div>
+
+        <!-- Friend Requests -->
+        <div class="friend-requests">
+          <h3>Friend Requests</h3>
+          <div id="friendRequests" class="user-list">
+            <!-- Friend requests will be displayed here -->
+          </div>
+        </div>
+
+        <!-- Friends List -->
+        <div class="friends-list">
+          <h3>Your Friends</h3>
+          <div id="friendsList" class="user-list">
+            <!-- Friends will be displayed here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../js/navbar.js"></script>
+    <script src="../js/people.js"></script>
+  </body>
+</html>

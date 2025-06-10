@@ -13,21 +13,20 @@
       <div class="feed-container">
         <!-- Create Post Section -->
         <div class="create-post">
-          <form id="createPostForm" class="post-form">
+          <form id="post-form">
             <textarea
-              id="postContent"
               placeholder="What's on your mind?"
               required
+              maxlength="500"
             ></textarea>
             <div class="post-actions">
-              <input type="file" id="postImage" accept="image/*" />
-              <button type="submit" class="btn btn-primary">Post</button>
+              <button type="submit" class="btn">Post</button>
             </div>
           </form>
         </div>
 
         <!-- Posts Feed -->
-        <div id="postsFeed" class="posts-feed">
+        <div id="posts-feed" class="posts-feed">
           <!-- Posts will be dynamically loaded here -->
         </div>
       </div>
