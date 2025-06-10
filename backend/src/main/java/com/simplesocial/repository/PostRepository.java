@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findByAuthor(User author, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.author IN (SELECT f.friend FROM Friendship f WHERE f.user = :user AND f.status = 'ACCEPTED') AND p.isPublic = true ORDER BY p.createdAt DESC")
+    @Query("SELECT p FROM Post p WHERE (p.author = :user OR (p.author IN (SELECT f.friend FROM Friendship f WHERE f.user = :user AND f.status = 'ACCEPTED') AND p.isPublic = true)) ORDER BY p.createdAt DESC")
     Page<Post> findFriendsPosts(@Param("user") User user, Pageable pageable);
 
     @Query("SELECT p FROM Post p WHERE p.group.id = :groupId ORDER BY p.createdAt DESC")

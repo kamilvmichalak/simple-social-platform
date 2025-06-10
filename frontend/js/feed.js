@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Load posts from the API
 async function loadPosts() {
     try {
+        console.log('Loading posts...');
         const response = await fetch(`${API_URL}/posts/feed`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -17,12 +18,24 @@ async function loadPosts() {
 
         if (response.ok) {
             const data = await response.json();
-            displayPosts(data.data);
+            console.log('Received posts data:', data);
+            
+            if (data.success && data.data) {
+                const posts = data.data.content || [];
+                console.log('Posts to display:', posts);
+                displayPosts(posts);
+            } else {
+                console.error('Invalid response format:', data);
+                displayPosts([]);
+            }
         } else {
-            console.error('Failed to load posts');
+            const errorData = await response.json();
+            console.error('Failed to load posts:', errorData);
+            displayPosts([]);
         }
     } catch (error) {
         console.error('Error loading posts:', error);
+        displayPosts([]);
     }
 }
 
@@ -31,7 +44,21 @@ function displayPosts(posts) {
     const feedContainer = document.getElementById('postsFeed');
     feedContainer.innerHTML = '';
 
+    console.log('Displaying posts:', posts);
+
+    if (!Array.isArray(posts)) {
+        console.error('Expected an array of posts but got:', posts);
+        feedContainer.innerHTML = '<div class="no-posts">Error loading posts</div>';
+        return;
+    }
+
+    if (posts.length === 0) {
+        feedContainer.innerHTML = '<div class="no-posts">No posts to display</div>';
+        return;
+    }
+
     posts.forEach(post => {
+        console.log('Creating element for post:', post);
         const postElement = createPostElement(post);
         feedContainer.appendChild(postElement);
     });
@@ -81,29 +108,58 @@ function setupPostForm() {
         const content = document.getElementById('postContent').value;
         const imageFile = document.getElementById('postImage').files[0];
 
-        const formData = new FormData();
-        formData.append('content', content);
-        if (imageFile) {
-            formData.append('image', imageFile);
-        }
-
         try {
+            console.log('Creating post with content:', content);
+            // First, if there's an image, upload it
+            let imageUrl = null;
+            if (imageFile) {
+                const imageFormData = new FormData();
+                imageFormData.append('file', imageFile);
+                
+                const imageResponse = await fetch(`${API_URL}/upload`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: imageFormData
+                });
+                
+                if (imageResponse.ok) {
+                    const imageData = await imageResponse.json();
+                    imageUrl = imageData.data;
+                }
+            }
+
+            // Then create the post with the image URL
+            const postData = {
+                content: content,
+                imageUrl: imageUrl,
+                isPublic: true
+            };
+
+            console.log('Sending post data:', postData);
             const response = await fetch(`${API_URL}/posts`, {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                    'Content-Type': 'application/json'
                 },
-                body: formData
+                body: JSON.stringify(postData)
             });
 
             if (response.ok) {
+                const responseData = await response.json();
+                console.log('Post created successfully:', responseData);
                 form.reset();
                 loadPosts(); // Reload posts after creating a new one
             } else {
-                console.error('Failed to create post');
+                const errorData = await response.json();
+                console.error('Failed to create post:', errorData);
+                alert('Failed to create post: ' + errorData.message);
             }
         } catch (error) {
             console.error('Error creating post:', error);
+            alert('Error creating post. Please try again.');
         }
     });
 }
