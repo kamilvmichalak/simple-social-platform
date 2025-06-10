@@ -26,7 +26,7 @@ public class Friendship {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private FriendshipStatus status = FriendshipStatus.PENDING;
+    private FriendshipStatus status = FriendshipStatus.ACCEPTED;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

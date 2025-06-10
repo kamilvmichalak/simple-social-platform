@@ -2,8 +2,7 @@ const API_URL = 'http://localhost:8080/api';
 
 // Load data when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    loadFriendRequests();
-    loadFriends();
+    loadUsers();
     setupSearch();
 });
 
@@ -12,35 +11,45 @@ function setupSearch() {
     const searchButton = document.getElementById('searchButton');
     const searchInput = document.getElementById('searchInput');
 
-    searchButton.addEventListener('click', () => {
-        const query = searchInput.value.trim();
-        if (query) {
-            searchUsers(query);
-        }
-    });
-
-    searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+    if (searchButton && searchInput) {
+        searchButton.addEventListener('click', () => {
             const query = searchInput.value.trim();
             if (query) {
                 searchUsers(query);
             }
-        }
-    });
+        });
+
+        searchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = searchInput.value.trim();
+                if (query) {
+                    searchUsers(query);
+                }
+            }
+        });
+    }
 }
 
 // Search for users
 async function searchUsers(query) {
     try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+            return;
+        }
+
         const response = await fetch(`${API_URL}/users/search?query=${encodeURIComponent(query)}`, {
             headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                'Authorization': `Bearer ${token}`
             }
         });
 
         if (response.ok) {
             const data = await response.json();
-            displaySearchResults(data.data);
+            if (data.success) {
+                displaySearchResults(data.data);
+            }
         } else {
             console.error('Failed to search users');
         }
@@ -52,189 +61,173 @@ async function searchUsers(query) {
 // Display search results
 function displaySearchResults(users) {
     const resultsContainer = document.getElementById('searchResults');
+    if (!resultsContainer) return;
+
     resultsContainer.innerHTML = '';
 
-    if (users.length === 0) {
+    if (!users || users.length === 0) {
         resultsContainer.innerHTML = '<p>No users found</p>';
         return;
     }
 
     users.forEach(user => {
-        const userElement = createUserElement(user, 'search');
+        const userElement = createUserElement(user);
         resultsContainer.appendChild(userElement);
     });
 }
 
-// Load friend requests
-async function loadFriendRequests() {
-    try {
-        const response = await fetch(`${API_URL}/friendships/requests`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            displayFriendRequests(data.data);
-        } else {
-            console.error('Failed to load friend requests');
-        }
-    } catch (error) {
-        console.error('Error loading friend requests:', error);
-    }
-}
-
-// Display friend requests
-function displayFriendRequests(requests) {
-    const requestsContainer = document.getElementById('friendRequests');
-    requestsContainer.innerHTML = '';
-
-    if (requests.length === 0) {
-        requestsContainer.innerHTML = '<p>No pending friend requests</p>';
-        return;
-    }
-
-    requests.forEach(request => {
-        const userElement = createUserElement(request.user, 'request');
-        requestsContainer.appendChild(userElement);
-    });
-}
-
-// Load friends
-async function loadFriends() {
-    try {
-        const response = await fetch(`${API_URL}/friendships/friends`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            displayFriends(data.data);
-        } else {
-            console.error('Failed to load friends');
-        }
-    } catch (error) {
-        console.error('Error loading friends:', error);
-    }
-}
-
-// Display friends
-function displayFriends(friends) {
-    const friendsContainer = document.getElementById('friendsList');
-    friendsContainer.innerHTML = '';
-
-    if (friends.length === 0) {
-        friendsContainer.innerHTML = '<p>No friends yet</p>';
-        return;
-    }
-
-    friends.forEach(friend => {
-        const userElement = createUserElement(friend, 'friend');
-        friendsContainer.appendChild(userElement);
-    });
-}
-
 // Create a user element
-function createUserElement(user, type) {
+function createUserElement(user) {
     const userDiv = document.createElement('div');
     userDiv.className = 'user-card';
     userDiv.innerHTML = `
-        <img src="${user.profilePicture || '../assets/default-avatar.png'}" alt="Profile" class="avatar">
         <div class="user-info">
-            <h4>${user.username}</h4>
-            <p>${user.name || ''}</p>
+            <img src="${user.profilePicture || 'https://via.placeholder.com/50'}" alt="Profile" class="avatar">
+            <div>
+                <h4>${user.username}</h4>
+                <p>${user.email}</p>
+            </div>
         </div>
         <div class="user-actions">
-            ${getActionButton(type, user.id)}
+            <button class="btn btn-primary follow-btn" data-user-id="${user.id}" data-following="0">
+                <i class="fas fa-user-plus"></i> Follow
+            </button>
         </div>
     `;
 
-    // Add event listener for the action button
-    const actionButton = userDiv.querySelector('.btn');
-    if (actionButton) {
-        actionButton.addEventListener('click', () => handleUserAction(type, user.id, actionButton));
-    }
+    // Add event listener for follow button
+    const followButton = userDiv.querySelector('.follow-btn');
+    followButton.addEventListener('click', () => handleFollow(user.id, followButton));
 
     return userDiv;
 }
 
-// Get the appropriate action button based on the type
-function getActionButton(type, userId) {
-    switch (type) {
-        case 'search':
-            return `<button class="btn btn-primary" data-user-id="${userId}">Add Friend</button>`;
-        case 'request':
-            return `
-                <button class="btn btn-success" data-user-id="${userId}">Accept</button>
-                <button class="btn btn-danger" data-user-id="${userId}">Reject</button>
-            `;
-        case 'friend':
-            return `<button class="btn btn-danger" data-user-id="${userId}">Unfriend</button>`;
-        default:
-            return '';
+// Load all users
+async function loadUsers() {
+    try {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login.html';
+            return;
+        }
+
+        // Get current user's friends
+        const friendsResponse = await fetch(`${API_URL}/friendships/user/me/friends`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const friendsData = await friendsResponse.json();
+        console.log('Friends data:', friendsData); // Debug log
+
+        const friends = friendsData.data || [];
+        console.log('Friends list:', friends); // Debug log
+
+        // Get all users
+        const response = await fetch(`${API_URL}/users`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        const data = await response.json();
+        console.log('Users data:', data); // Debug log
+        
+        if (data.success) {
+            const users = data.data.content || []; // Get the content array from the paginated response
+            const searchResults = document.getElementById('searchResults');
+            if (!searchResults) return;
+
+            searchResults.innerHTML = '';
+
+            if (users.length === 0) {
+                searchResults.innerHTML = '<p>No users found</p>';
+                return;
+            }
+
+            users.forEach(user => {
+                // Check if user is in friends list
+                const isFriend = friends.some(friend => friend.id === user.id);
+                console.log(`User ${user.username} isFriend:`, isFriend); // Debug log
+                const userElement = createUserElement(user);
+                if (isFriend) {
+                    const followButton = userElement.querySelector('.follow-btn');
+                    followButton.dataset.following = '1';
+                    followButton.innerHTML = '<i class="fas fa-user-check"></i> Following';
+                    followButton.classList.remove('btn-primary');
+                    followButton.classList.add('btn-success');
+                }
+                searchResults.appendChild(userElement);
+            });
+        } else {
+            console.error('Error loading users:', data.message);
+            const searchResults = document.getElementById('searchResults');
+            if (searchResults) {
+                searchResults.innerHTML = '<p>Error loading users</p>';
+            }
+        }
+    } catch (error) {
+        console.error('Error loading users:', error);
+        const searchResults = document.getElementById('searchResults');
+        if (searchResults) {
+            searchResults.innerHTML = '<p>Error loading users</p>';
+        }
     }
 }
 
-// Handle user actions (add friend, accept/reject request, unfriend)
-async function handleUserAction(type, userId, button) {
+// Handle follow button click
+async function handleFollow(userId, button) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+        return;
+    }
+
     try {
+        const isFollowing = button.dataset.following === '1';
+        console.log('Current following state:', isFollowing); // Debug log
+
         let response;
-        const token = localStorage.getItem('token');
-        const headers = {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        };
-
-        switch (type) {
-            case 'search':
-                response = await fetch(`${API_URL}/friendships/request/${userId}`, {
-                    method: 'POST',
-                    headers
-                });
-                if (response.ok) {
-                    button.textContent = 'Request Sent';
-                    button.disabled = true;
+        if (isFollowing) {
+            // Unfollow
+            response = await fetch(`${API_URL}/friendships/user/${userId}/unfollow`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
-                break;
-
-            case 'request':
-                if (button.classList.contains('btn-success')) {
-                    response = await fetch(`${API_URL}/friendships/accept/${userId}`, {
-                        method: 'POST',
-                        headers
-                    });
-                } else {
-                    response = await fetch(`${API_URL}/friendships/reject/${userId}`, {
-                        method: 'POST',
-                        headers
-                    });
+            });
+        } else {
+            // Follow
+            response = await fetch(`${API_URL}/friendships/user/${userId}/follow`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
-                if (response.ok) {
-                    loadFriendRequests();
-                    loadFriends();
-                }
-                break;
-
-            case 'friend':
-                response = await fetch(`${API_URL}/friendships/${userId}`, {
-                    method: 'DELETE',
-                    headers
-                });
-                if (response.ok) {
-                    loadFriends();
-                }
-                break;
+            });
         }
 
         if (!response.ok) {
-            const error = await response.json();
-            alert(error.message || 'Failed to perform action');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to follow/unfollow user');
+        }
+
+        // Update button state
+        const newState = !isFollowing;
+        button.dataset.following = newState ? '1' : '0';
+        button.innerHTML = `<i class="fas ${newState ? 'fa-user-check' : 'fa-user-plus'}"></i> ${newState ? 'Following' : 'Follow'}`;
+        button.classList.toggle('btn-primary', !newState);
+        button.classList.toggle('btn-success', newState);
+        
+        console.log('Updated following state:', button.dataset.following); // Debug log
+
+        // Don't reload the users list immediately
+        // Instead, update the button state locally
+        const userCard = button.closest('.user-card');
+        if (userCard) {
+            const username = userCard.querySelector('h4').textContent;
+            console.log(`Updated button state for user ${username}:`, newState);
         }
     } catch (error) {
-        console.error('Error performing action:', error);
-        alert('Error performing action. Please try again.');
+        console.error('Error following/unfollowing user:', error);
+        alert(error.message || 'Failed to follow/unfollow user. Please try again.');
     }
-} 
+}

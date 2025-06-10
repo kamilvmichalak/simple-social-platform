@@ -13,21 +13,17 @@ import java.util.Optional;
 
 @Repository
 public interface FriendshipRepository extends JpaRepository<Friendship, Long> {
-    Optional<Friendship> findByUserAndFriend(User user, User friend);
+        Optional<Friendship> findByUserAndFriend(User user, User friend);
 
-    boolean existsByUserAndFriend(User user, User friend);
+        boolean existsByUserAndFriend(User user, User friend);
 
-    @Query("SELECT f FROM Friendship f WHERE " +
-            "(f.user = :user OR f.friend = :user) AND " +
-            "f.status = :status")
-    List<Friendship> findUserFriendshipsByStatus(
-            @Param("user") User user,
-            @Param("status") FriendshipStatus status);
+        @Query("SELECT f FROM Friendship f JOIN FETCH f.user JOIN FETCH f.friend WHERE f.user = :user AND f.status = :status")
+        List<Friendship> findUserFriendshipsByStatus(
+                        @Param("user") User user,
+                        @Param("status") FriendshipStatus status);
 
-    @Query("SELECT CASE WHEN f.user = :user THEN f.friend ELSE f.user END FROM Friendship f WHERE " +
-            "(f.user = :user OR f.friend = :user) AND " +
-            "f.status = :status")
-    List<User> findUserFriendsByStatus(
-            @Param("user") User user,
-            @Param("status") FriendshipStatus status);
+        @Query("SELECT f.friend FROM Friendship f WHERE f.user = :user AND f.status = :status")
+        List<User> findUserFriendsByStatus(
+                        @Param("user") User user,
+                        @Param("status") FriendshipStatus status);
 }

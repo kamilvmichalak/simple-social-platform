@@ -8,6 +8,7 @@ import com.simplesocial.service.FriendshipService;
 import com.simplesocial.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -61,10 +62,71 @@ public class FriendshipController {
         return ResponseEntity.ok(ApiResponse.success(friendshipService.findUserFriendshipsByStatus(user, status)));
     }
 
+    @PostMapping("/user/{friendId}/follow")
+    public ResponseEntity<ApiResponse<Friendship>> followUser(
+            @PathVariable Long friendId,
+            Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        User friend = userService.findById(friendId);
+
+        if (friend == null) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("User not found"));
+        }
+
+        // Check if already following
+        Optional<Friendship> existingFriendship = friendshipService.findByUserAndFriend(currentUser, friend);
+        if (existingFriendship.isPresent()) {
+            return ResponseEntity.ok(ApiResponse.success(existingFriendship.get()));
+        }
+
+        // Create new friendship with ACCEPTED status
+        Friendship friendship = new Friendship();
+        friendship.setUser(currentUser);
+        friendship.setFriend(friend);
+        friendship.setStatus(FriendshipStatus.ACCEPTED); // Direct follow, no need for acceptance
+
+        try {
+            Friendship savedFriendship = friendshipService.createFriendship(friendship);
+            return ResponseEntity.ok(ApiResponse.success(savedFriendship));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("Failed to follow user: " + e.getMessage()));
+        }
+    }
+
+    @DeleteMapping("/user/{friendId}/unfollow")
+    public ResponseEntity<ApiResponse<Void>> unfollowUser(
+            @PathVariable Long friendId,
+            Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        User friend = userService.findById(friendId);
+
+        if (friend == null) {
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error("User not found"));
+        }
+
+        Optional<Friendship> friendship = friendshipService.findByUserAndFriend(currentUser, friend);
+        if (friendship.isPresent()) {
+            friendshipService.deleteFriendship(friendship.get().getId());
+            return ResponseEntity.ok(ApiResponse.success("Unfollowed successfully", null));
+        }
+
+        return ResponseEntity.ok(ApiResponse.success("Already not following", null));
+    }
+
+    @GetMapping("/user/me/friends")
+    public ResponseEntity<ApiResponse<List<User>>> getMyFriends(Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(
+                friendshipService.findUserFriendsByStatus(currentUser, FriendshipStatus.ACCEPTED)));
+    }
+
     @GetMapping("/user/{userId}/friends")
     public ResponseEntity<ApiResponse<List<User>>> getUserFriends(@PathVariable Long userId) {
         User user = userService.findById(userId);
-        return ResponseEntity
-                .ok(ApiResponse.success(friendshipService.findUserFriendsByStatus(user, FriendshipStatus.ACCEPTED)));
+        return ResponseEntity.ok(ApiResponse.success(
+                friendshipService.findUserFriendsByStatus(user, FriendshipStatus.ACCEPTED)));
     }
 }
