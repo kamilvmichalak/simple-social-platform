@@ -1,3 +1,16 @@
+/* ==========================
+   Global Theme Variables
+   ========================== */
+:root {
+    --primary-color: #3498db;
+    --primary-dark: #2980b9;
+    --accent-color: #00bcd4;
+    --text-color: #2c3e50;
+    --background-color: #f4f6f8;
+    --card-background: #ffffff;
+    --hover-background: #ecf0f1;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -5,13 +18,14 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Inter', Arial, sans-serif;
     line-height: 1.6;
-    background-color: #f4f4f4;
+    background-color: var(--background-color);
+    color: var(--text-color);
 }
 
 .navbar {
-    background-color: #ffffff;
+    background-color: var(--text-color);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 1rem;
     position: fixed;
@@ -24,11 +38,26 @@ body {
     align-items: center;
 }
 
-.navbar-brand a {
-    color: #007bff;
-    font-size: 1.5rem;
-    font-weight: bold;
+
+.nav-brand a {
+    font-size: 1.25rem;
+    font-weight: 900;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #ffffff, #b2dfdb);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.6);
+    letter-spacing: 2px;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: transform 0.2s ease, text-shadow 0.2s ease;
     text-decoration: none;
+    display: inline-block;
+}
+
+.nav-brand a:hover {
+    transform: scale(1.05);
+    text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.9);
 }
 
 .navbar-menu {
@@ -37,14 +66,15 @@ body {
 }
 
 .nav-item {
-    color: #333;
+    color: var(--hover-background);
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 4px;
+    transition: background-color 0.2s;
 }
 
 .nav-item:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
 }
 
 .user-menu {
@@ -64,7 +94,7 @@ body {
     position: absolute;
     right: 0;
     top: 100%;
-    background-color: white;
+    background-color: var(--card-background);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     padding: 0.5rem 0;
@@ -77,44 +107,47 @@ body {
 .dropdown-menu a {
     display: block;
     padding: 0.5rem 1rem;
-    color: #333;
+    color: var(--text-color);
     text-decoration: none;
 }
 
 .dropdown-menu a:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
 }
 
 .container {
     max-width: 1200px;
-    margin: 80px auto 0;
-    padding: 20px;
+    margin-top: 100px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px;
     display: grid;
     grid-template-columns: 2fr 1fr;
     gap: 20px;
 }
 
 .features {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    display: flex;
+    justify-content: space-between;
     gap: 2rem;
     margin-top: 2rem;
 }
 
 .feature-card {
-    background-color: white;
+    background-color: var(--card-background);
     padding: 1.5rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    flex: 1;
 }
 
 .feature-card h3 {
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 0.5rem;
 }
 
 .feature-card p {
-    color: #666;
+    color: #555;
 }
 
 /* Auth Container */
@@ -127,7 +160,7 @@ body {
 }
 
 .auth-box {
-    background: white;
+    background: var(--card-background);
     padding: 30px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -138,7 +171,7 @@ body {
 .auth-box h2 {
     text-align: center;
     margin-bottom: 20px;
-    color: #333;
+    color: var(--text-color);
 }
 
 /* Form Styles */
@@ -168,22 +201,22 @@ body {
 
 /* Button Styles */
 .btn {
-    padding: 12px;
+    border-radius: 6px;
+    font-size: 1rem;
+    padding: 10px 20px;
     border: none;
-    border-radius: 4px;
     cursor: pointer;
-    font-size: 16px;
     font-weight: bold;
     transition: background-color 0.3s;
 }
 
 .btn-primary {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
 }
 
 .btn-primary:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-dark);
 }
 
 /* Auth Links */
@@ -193,7 +226,7 @@ body {
 }
 
 .auth-link a {
-    color: #007bff;
+    color: var(--primary-color);
     text-decoration: none;
 }
 
@@ -203,7 +236,7 @@ body {
 
 /* Feed */
 .feed-container {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -236,7 +269,7 @@ body {
 
 /* Posts */
 .post {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -252,7 +285,7 @@ body {
 
 .post-info h4 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .post-time {
@@ -285,7 +318,7 @@ body {
 }
 
 .btn-like:hover, .btn-comment:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
 }
 
 /* Comments */
@@ -307,7 +340,7 @@ body {
 
 .comment-content h5 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .comment-time {
@@ -330,7 +363,7 @@ body {
 
 /* Sidebar */
 .sidebar {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -342,7 +375,7 @@ body {
 
 .sidebar-section h3 {
     margin: 0 0 10px;
-    color: #333;
+    color: var(--text-color);
 }
 
 .trending-topics {
@@ -353,7 +386,7 @@ body {
 
 /* Profile */
 .profile-container {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -365,8 +398,8 @@ body {
 
 .profile-cover {
     height: 200px;
-    background-color: #007bff;
-    background-image: linear-gradient(45deg, #007bff, #00bcd4);
+    background-color: var(--primary-color);
+    background-image: linear-gradient(45deg, var(--primary-color), var(--accent-color));
 }
 
 .profile-info {
@@ -382,7 +415,7 @@ body {
     width: 120px;
     height: 120px;
     border-radius: 50%;
-    border: 4px solid white;
+    border: 4px solid var(--card-background);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     object-fit: cover;
 }
@@ -393,7 +426,7 @@ body {
 
 .profile-details h2 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .profile-details p {
@@ -415,7 +448,7 @@ body {
     display: block;
     font-size: 1.2rem;
     font-weight: bold;
-    color: #333;
+    color: var(--text-color);
 }
 
 .stat-label {
@@ -429,7 +462,7 @@ body {
 
 .profile-posts h3 {
     margin: 0 0 20px;
-    color: #333;
+    color: var(--text-color);
 }
 
 .friends-list {
@@ -439,7 +472,7 @@ body {
 }
 
 .friend-card {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 15px;
@@ -456,7 +489,7 @@ body {
 
 .friend-name {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
     font-size: 1rem;
 }
 
@@ -467,7 +500,7 @@ body {
 }
 
 .btn-friend {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -477,7 +510,7 @@ body {
 }
 
 .btn-friend:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-dark);
 }
 
 .btn-friend.friends {
@@ -494,7 +527,7 @@ body {
     grid-template-columns: 300px 1fr;
     gap: 20px;
     height: calc(100vh - 100px);
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -534,7 +567,7 @@ body {
 }
 
 .conversation:hover {
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
 }
 
 .conversation.active {
@@ -547,7 +580,7 @@ body {
 
 .conversation-info h4 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .conversation-info p {
@@ -572,7 +605,7 @@ body {
 .chat-header {
     padding: 15px;
     border-bottom: 1px solid #ddd;
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
 }
 
 .chat-user-info {
@@ -583,7 +616,7 @@ body {
 
 .chat-user-info h3 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 #chat-status {
@@ -609,7 +642,7 @@ body {
 
 .message.sent {
     align-self: flex-end;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border-bottom-right-radius: 5px;
 }
@@ -617,7 +650,7 @@ body {
 .message.received {
     align-self: flex-start;
     background-color: #e9ecef;
-    color: #333;
+    color: var(--text-color);
     border-bottom-left-radius: 5px;
 }
 
@@ -634,7 +667,7 @@ body {
 .chat-input {
     padding: 15px;
     border-top: 1px solid #ddd;
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
 }
 
 .chat-input form {
@@ -651,7 +684,7 @@ body {
 
 .chat-input button {
     padding: 8px 20px;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 4px;
@@ -659,12 +692,12 @@ body {
 }
 
 .chat-input button:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-dark);
 }
 
 /* Groups */
 .groups-container {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     padding: 20px;
@@ -679,7 +712,7 @@ body {
 
 .groups-header h2 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .groups-search {
@@ -700,7 +733,7 @@ body {
 }
 
 .group-card {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -713,8 +746,8 @@ body {
 
 .group-cover {
     height: 120px;
-    background-color: #007bff;
-    background-image: linear-gradient(45deg, #007bff, #00bcd4);
+    background-color: var(--primary-color);
+    background-image: linear-gradient(45deg, var(--primary-color), var(--accent-color));
 }
 
 .group-info {
@@ -723,7 +756,7 @@ body {
 
 .group-info h3 {
     margin: 0 0 10px;
-    color: #333;
+    color: var(--text-color);
 }
 
 .group-description {
@@ -758,7 +791,7 @@ body {
 
 .btn-join {
     flex: 1;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 8px;
@@ -767,7 +800,7 @@ body {
 }
 
 .btn-join:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-dark);
 }
 
 .btn-join.joined {
@@ -790,7 +823,7 @@ body {
     gap: 10px;
     padding: 10px;
     border-radius: 4px;
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
     cursor: pointer;
     transition: background-color 0.2s;
 }
@@ -812,7 +845,7 @@ body {
 
 .my-group-info h4, .suggested-group-info h4 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
     font-size: 1rem;
 }
 
@@ -841,7 +874,7 @@ body {
 }
 
 .modal-content {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     width: 100%;
@@ -860,7 +893,7 @@ body {
 
 .modal-header h3 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
 }
 
 .close-btn {
@@ -886,7 +919,7 @@ body {
 .form-group label {
     display: block;
     margin-bottom: 5px;
-    color: #333;
+    color: var(--text-color);
 }
 
 .form-group input,
@@ -925,7 +958,7 @@ body {
 
 /* Group Detail */
 .group-container {
-    background-color: white;
+    background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
@@ -937,8 +970,8 @@ body {
 
 .group-cover {
     height: 200px;
-    background-color: #007bff;
-    background-image: linear-gradient(45deg, #007bff, #00bcd4);
+    background-color: var(--primary-color);
+    background-image: linear-gradient(45deg, var(--primary-color), var(--accent-color));
 }
 
 .group-info {
@@ -949,7 +982,7 @@ body {
 
 .group-info h1 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
     font-size: 2rem;
 }
 
@@ -992,7 +1025,7 @@ body {
     gap: 10px;
     padding: 10px;
     border-radius: 4px;
-    background-color: #f8f9fa;
+    background-color: var(--hover-background);
 }
 
 .member-avatar {
@@ -1008,7 +1041,7 @@ body {
 
 .member-info h4 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
     font-size: 1rem;
 }
 
@@ -1019,7 +1052,7 @@ body {
 }
 
 .member-role {
-    color: #007bff;
+    color: var(--primary-color);
     font-size: 0.9rem;
 }
 
@@ -1047,7 +1080,7 @@ body {
 
 .invite-user-info h4 {
     margin: 0;
-    color: #333;
+    color: var(--text-color);
     font-size: 1rem;
 }
 
@@ -1058,7 +1091,7 @@ body {
 }
 
 .btn-invite {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -1067,7 +1100,7 @@ body {
 }
 
 .btn-invite:hover {
-    background-color: #0056b3;
+    background-color: var(--primary-dark);
 }
 
 .btn-invite.sent {
@@ -1077,4 +1110,17 @@ body {
 
 .btn-invite.sent:hover {
     background-color: #28a745;
-} 
+}
+
+.nav-links a {
+    color: #ffffff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav-links a:hover {
+    background-color: var(--hover-background);
+    color: black;
+}
