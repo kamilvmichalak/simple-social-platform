@@ -345,15 +345,62 @@ body {
 
 /* Comments */
 .comments-section {
-    margin-top: 15px;
-    border-top: 1px solid #ddd;
-    padding-top: 15px;
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: var(--background-color);
+    border-radius: 8px;
+}
+
+.comment-form {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.comment-form input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.comment-form button {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.comment-form button:hover {
+    background-color: var(--primary-dark);
+}
+
+.comments-list {
+    display: none;
+}
+
+.comments-list.show {
+    display: block;
 }
 
 .comment {
     display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment .avatar {
+    width: 32px;
+    height: 32px;
 }
 
 .comment-content {
@@ -362,25 +409,44 @@ body {
 
 .comment-content h5 {
     margin: 0;
+    font-size: 14px;
     color: var(--text-color);
 }
 
+.comment-content p {
+    margin: 0.25rem 0;
+    font-size: 14px;
+}
+
 .comment-time {
+    font-size: 12px;
     color: #666;
-    font-size: 0.8rem;
 }
 
-.comment-form {
+.btn-like, .btn-comment {
     display: flex;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.comment-form input {
-    flex: 1;
-    padding: 8px;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: transparent;
     border: 1px solid #ddd;
     border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-like:hover, .btn-comment:hover {
+    background-color: var(--hover-background);
+}
+
+.btn-like.active {
+    background-color: #ff6b6b;
+    color: white;
+    border-color: #ff6b6b;
+}
+
+.like-count, .comment-count {
+    font-weight: bold;
 }
 
 /* Sidebar */

@@ -23,6 +23,24 @@ async function loadPosts() {
             if (data.success && data.data) {
                 const posts = data.data.content || [];
                 console.log('Posts to display:', posts);
+                
+                // Sprawdź reakcje użytkownika dla każdego posta
+                for (const post of posts) {
+                    try {
+                        const reactionResponse = await fetch(`${API_URL}/reactions/posts/${post.id}/user`, {
+                            headers: {
+                                'Authorization': `Bearer ${localStorage.getItem('token')}`
+                            }
+                        });
+                        if (reactionResponse.ok) {
+                            const reactionData = await reactionResponse.json();
+                            post.userReaction = reactionData.data?.type || null;
+                        }
+                    } catch (error) {
+                        console.error('Error checking user reaction:', error);
+                    }
+                }
+                
                 displayPosts(posts);
             } else {
                 console.error('Invalid response format:', data);
@@ -81,7 +99,7 @@ function createPostElement(post) {
             ${post.imageUrl ? `<img src="${post.imageUrl}" alt="Post image" class="post-image">` : ''}
         </div>
         <div class="post-actions">
-            <button class="btn btn-like" data-post-id="${post.id}">
+            <button class="btn btn-like ${post.userReaction === 'LIKE' ? 'active' : ''}" data-post-id="${post.id}">
                 <span class="like-count">${post.likesCount || 0}</span> Likes
             </button>
             <button class="btn btn-comment" data-post-id="${post.id}">
@@ -89,7 +107,11 @@ function createPostElement(post) {
             </button>
         </div>
         <div class="comments-section" id="comments-${post.id}">
-            <!-- Comments will be loaded here -->
+            <form class="comment-form" data-post-id="${post.id}">
+                <input type="text" placeholder="Write a comment..." required>
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+            <div class="comments-list"></div>
         </div>
     `;
 
@@ -145,6 +167,9 @@ function setupPostForm() {
 function setupPostInteractions(postElement, post) {
     const likeButton = postElement.querySelector('.btn-like');
     const commentButton = postElement.querySelector('.btn-comment');
+    const commentForm = postElement.querySelector('.comment-form');
+    const commentsSection = postElement.querySelector(`#comments-${post.id}`);
+    const commentsList = commentsSection.querySelector('.comments-list');
 
     likeButton.addEventListener('click', async () => {
         try {
@@ -158,7 +183,16 @@ function setupPostInteractions(postElement, post) {
             });
 
             if (response.ok) {
-                loadPosts(); // Reload posts to update like count
+                const likeCount = likeButton.querySelector('.like-count');
+                const currentLikes = parseInt(likeCount.textContent);
+                
+                if (likeButton.classList.contains('active')) {
+                    likeCount.textContent = currentLikes - 1;
+                    likeButton.classList.remove('active');
+                } else {
+                    likeCount.textContent = currentLikes + 1;
+                    likeButton.classList.add('active');
+                }
             }
         } catch (error) {
             console.error('Error liking post:', error);
@@ -166,64 +200,20 @@ function setupPostInteractions(postElement, post) {
     });
 
     commentButton.addEventListener('click', () => {
-        const commentsSection = postElement.querySelector(`#comments-${post.id}`);
-        if (commentsSection.style.display === 'none') {
-            loadComments(post.id, commentsSection);
-            commentsSection.style.display = 'block';
+        if (commentsList.style.display === 'none') {
+            loadComments(post.id, commentsList);
+            commentsList.style.display = 'block';
         } else {
-            commentsSection.style.display = 'none';
+            commentsList.style.display = 'none';
         }
     });
-}
 
-// Load comments for a post
-async function loadComments(postId, commentsSection) {
-    try {
-        const response = await fetch(`${API_URL}/comments/posts/${postId}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            displayComments(data.data, commentsSection);
-        }
-    } catch (error) {
-        console.error('Error loading comments:', error);
-    }
-}
-
-// Display comments in the comments section
-function displayComments(comments, commentsSection) {
-    commentsSection.innerHTML = `
-        <div class="comments-list">
-            ${comments.map(comment => `
-                <div class="comment">
-                    <img src="${comment.author.profilePicture || '../assets/default-avatar.png'}" alt="Profile" class="avatar">
-                    <div class="comment-content">
-                        <h5>${comment.author.username}</h5>
-                        <p>${comment.content}</p>
-                        <span class="comment-time">${new Date(comment.createdAt).toLocaleString()}</span>
-                    </div>
-                </div>
-            `).join('')}
-        </div>
-        <form class="comment-form" data-post-id="${comments[0]?.postId}">
-            <input type="text" placeholder="Write a comment..." required>
-            <button type="submit" class="btn btn-primary">Comment</button>
-        </form>
-    `;
-
-    // Add event listener for comment form
-    const commentForm = commentsSection.querySelector('.comment-form');
     commentForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const content = commentForm.querySelector('input').value;
-        const postId = commentForm.dataset.postId;
 
         try {
-            const response = await fetch(`${API_URL}/comments/posts/${postId}`, {
+            const response = await fetch(`${API_URL}/comments/posts/${post.id}`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -233,11 +223,64 @@ function displayComments(comments, commentsSection) {
             });
 
             if (response.ok) {
-                commentForm.reset();
-                loadComments(postId, commentsSection);
+                const data = await response.json();
+                if (data.success && data.data) {
+                    commentForm.reset();
+                    const commentCount = commentButton.querySelector('.comment-count');
+                    const currentComments = parseInt(commentCount.textContent);
+                    commentCount.textContent = currentComments + 1;
+                    
+                    // Dodaj nowy komentarz do listy
+                    const newComment = data.data;
+                    const commentElement = document.createElement('div');
+                    commentElement.className = 'comment';
+                    commentElement.innerHTML = `
+                        <img src="${newComment.author.profilePicture || '../assets/default-avatar.png'}" alt="Profile" class="avatar">
+                        <div class="comment-content">
+                            <h5>${newComment.author.username}</h5>
+                            <p>${newComment.content}</p>
+                            <span class="comment-time">${new Date(newComment.createdAt).toLocaleString()}</span>
+                        </div>
+                    `;
+                    commentsList.appendChild(commentElement);
+                }
             }
         } catch (error) {
             console.error('Error posting comment:', error);
         }
     });
+}
+
+// Load comments for a post
+async function loadComments(postId, commentsList) {
+    try {
+        const response = await fetch(`${API_URL}/comments/posts/${postId}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            if (data.success && data.data) {
+                displayComments(data.data.content || [], commentsList);
+            }
+        }
+    } catch (error) {
+        console.error('Error loading comments:', error);
+    }
+}
+
+// Display comments in the comments section
+function displayComments(comments, commentsList) {
+    commentsList.innerHTML = comments.map(comment => `
+        <div class="comment">
+            <img src="${comment.author.profilePicture || '../assets/default-avatar.png'}" alt="Profile" class="avatar">
+            <div class="comment-content">
+                <h5>${comment.author.username}</h5>
+                <p>${comment.content}</p>
+                <span class="comment-time">${new Date(comment.createdAt).toLocaleString()}</span>
+            </div>
+        </div>
+    `).join('');
 } 

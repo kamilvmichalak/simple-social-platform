@@ -31,7 +31,7 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<Reaction> reactions = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -72,11 +72,13 @@ public class Post {
 
     @Transient
     public Long getLikesCount() {
-        return 0L; // TODO: Implement actual count
+        return reactions.stream()
+                .filter(reaction -> ReactionType.LIKE.equals(reaction.getType()))
+                .count();
     }
 
     @Transient
     public Long getCommentsCount() {
-        return 0L; // TODO: Implement actual count
+        return (long) comments.size();
     }
 }

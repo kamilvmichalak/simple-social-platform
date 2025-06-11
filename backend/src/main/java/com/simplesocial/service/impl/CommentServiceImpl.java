@@ -104,7 +104,7 @@ public class CommentServiceImpl implements CommentService {
         response.setPostId(comment.getPost().getId());
         response.setCreatedAt(comment.getCreatedAt());
         response.setUpdatedAt(comment.getUpdatedAt());
-        response.setLikesCount(0); // TODO: Implement likes functionality
+        response.setLikesCount(comment.getLikes().size());
         return response;
     }
 }

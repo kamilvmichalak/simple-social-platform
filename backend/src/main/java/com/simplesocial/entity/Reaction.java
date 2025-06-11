@@ -14,6 +14,10 @@ public class Reaction {
     @Enumerated(EnumType.STRING)
     private ReactionType type;
 
+    public ReactionType getType() {
+        return type;
+    }
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
