@@ -82,8 +82,8 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public java.util.List<Group> findAll() {
-        return groupRepository.findAll();
+    public java.util.List<Group> findUserGroups(User user) {
+        return groupRepository.findUserGroups(user, Pageable.unpaged()).getContent();
     }
 
     @Override
