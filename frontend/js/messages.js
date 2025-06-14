@@ -17,7 +17,7 @@ async function loadConversations() {
             return;
         }
 
-        const response = await fetch(`${API_URL}/messages/conversations`, {
+        const response = await fetch(`${API_URL}/friendships/user/me/friends`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -27,57 +27,56 @@ async function loadConversations() {
             throw new Error('Failed to load conversations');
         }
 
-        const conversations = await response.json();
-        displayConversations(conversations);
+        const data = await response.json();
+        const friends = data.data || [];
+        displayConversations(friends);
     } catch (error) {
         console.error('Error loading conversations:', error);
     }
 }
 
-function displayConversations(conversations) {
+function displayConversations(users) {
     const conversationsContainer = document.getElementById('conversations');
     conversationsContainer.innerHTML = '';
 
-    if (conversations.length === 0) {
+    if (users.length === 0) {
         conversationsContainer.innerHTML = '<p class="no-conversations">No conversations yet</p>';
         return;
     }
 
-    conversations.forEach(conversation => {
+    users.forEach(user => {
         const conversationElement = document.createElement('div');
         conversationElement.className = 'conversation';
-        conversationElement.dataset.conversationId = conversation.id;
+        conversationElement.dataset.conversationId = user.id;
         conversationElement.innerHTML = `
-            <img src="${conversation.participant.profilePicture || '../assets/default-avatar.png'}" alt="Profile" class="avatar">
+            <img src="${user.profilePicture || '../assets/default-avatar.png'}" alt="Profile" class="avatar">
             <div class="conversation-info">
-                <h4>${conversation.participant.username}</h4>
-                <p>${conversation.lastMessage?.content || 'No messages yet'}</p>
+                <h4>${user.username}</h4>
             </div>
-            <span class="conversation-time">${conversation.lastMessage ? new Date(conversation.lastMessage.createdAt).toLocaleTimeString() : ''}</span>
         `;
 
         conversationElement.addEventListener('click', () => {
-            selectConversation(conversation);
+            selectConversation(user);
         });
 
         conversationsContainer.appendChild(conversationElement);
     });
 }
 
-async function selectConversation(conversation) {
-    currentConversation = conversation;
+async function selectConversation(user) {
+    currentConversation = user;
     
     // Update UI
     document.querySelectorAll('.conversation').forEach(el => {
         el.classList.remove('active');
     });
-    document.querySelector(`[data-conversation-id="${conversation.id}"]`).classList.add('active');
-    
-    document.getElementById('chat-username').textContent = conversation.participant.username;
-    document.getElementById('chat-status').textContent = conversation.participant.online ? 'online' : 'offline';
+    document.querySelector(`[data-conversation-id="${user.id}"]`).classList.add('active');
+
+    document.getElementById('chat-username').textContent = user.username;
+    document.getElementById('chat-status').textContent = '';
     
     // Load messages
-    await loadMessages(conversation.id);
+    await loadMessages(user.id);
     
     // Start polling for new messages
     if (messagePollingInterval) {
@@ -93,7 +92,7 @@ async function selectConversation(conversation) {
 async function loadMessages(conversationId) {
     try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/messages/${conversationId}`, {
+        const response = await fetch(`${API_URL}/messages/conversation/${conversationId}`, {
             headers: {
                 'Authorization': `Bearer ${token}`
             }
@@ -103,7 +102,8 @@ async function loadMessages(conversationId) {
             throw new Error('Failed to load messages');
         }
 
-        const messages = await response.json();
+        const data = await response.json();
+        const messages = data.data ? data.data.content || [] : [];
         displayMessages(messages);
     } catch (error) {
         console.error('Error loading messages:', error);
@@ -118,6 +118,7 @@ function displayMessages(messages) {
         messagesContainer.innerHTML = '<p class="no-messages">No messages yet</p>';
         return;
     }
+    messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
@@ -150,13 +151,13 @@ function setupMessageForm() {
 
         try {
             const token = localStorage.getItem('token');
-            const response = await fetch(`${API_URL}/messages/${currentConversation.id}`, {
+            const response = await fetch(`${API_URL}/messages`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ content })
+                body: JSON.stringify({ content, recipientId: currentConversation.id })
             });
 
             if (!response.ok) {
@@ -231,28 +232,7 @@ function displaySearchResults(users) {
 }
 
 async function startNewConversation(user) {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/messages/conversations`, {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ participantId: user.id })
-        });
-
-        if (!response.ok) {
-            throw new Error('Failed to create conversation');
-        }
-
-        const conversation = await response.json();
-        await loadConversations();
-        selectConversation(conversation);
-    } catch (error) {
-        console.error('Error creating conversation:', error);
-        alert('Failed to start conversation. Please try again.');
-    }
+    selectConversation(user);
 }
 
 function getCurrentUserId() {
