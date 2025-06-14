@@ -6,6 +6,8 @@ import com.simplesocial.entity.GroupMember;
 import com.simplesocial.entity.User;
 import com.simplesocial.service.GroupService;
 import com.simplesocial.service.UserService;
+import java.util.List;
+import org.springframework.security.core.Authentication;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,9 +21,17 @@ public class GroupController {
     private final GroupService groupService;
     private final UserService userService;
 
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<Group>>> getAllGroups() {
+        return ResponseEntity.ok(ApiResponse.success(groupService.findAll()));
+    }
+
     @PostMapping
-    public ResponseEntity<ApiResponse<Group>> createGroup(@RequestBody Group group) {
-        return ResponseEntity.ok(ApiResponse.success(groupService.createGroup(group)));
+    public ResponseEntity<ApiResponse<Group>> createGroup(
+            @RequestBody Group group,
+            Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(groupService.createGroup(group, currentUser)));
     }
 
     @GetMapping("/{id}")

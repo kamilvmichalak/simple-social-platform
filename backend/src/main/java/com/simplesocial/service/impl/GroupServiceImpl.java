@@ -22,7 +22,8 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     @Transactional
-    public Group createGroup(Group group) {
+    public Group createGroup(Group group, User creator) {
+        group.setCreator(creator);
         return groupRepository.save(group);
     }
 
@@ -73,6 +74,11 @@ public class GroupServiceImpl implements GroupService {
     @Override
     public Page<Group> findUserGroups(User user, Pageable pageable) {
         return groupRepository.findUserGroups(user, pageable);
+    }
+
+    @Override
+    public java.util.List<Group> findAll() {
+        return groupRepository.findAll();
     }
 
     @Override
