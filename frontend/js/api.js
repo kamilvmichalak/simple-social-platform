@@ -10,7 +10,6 @@ function updateNavigation() {
     const navLinks = document.querySelector('.nav-links');
     if (isLoggedIn()) {
         navLinks.innerHTML = `
-            <a href="/index.html">Home</a>
             <a href="/pages/feed.html">Feed</a>
             <a href="/pages/people.html">People</a>
             <a href="/pages/messages.html">Messages</a>
@@ -20,7 +19,6 @@ function updateNavigation() {
         `;
     } else {
         navLinks.innerHTML = `
-            <a href="/index.html">Home</a>
             <a href="/pages/login.html">Login</a>
             <a href="/pages/register.html">Register</a>
         `;
