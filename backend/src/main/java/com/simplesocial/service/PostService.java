@@ -22,4 +22,6 @@ public interface PostService {
     Page<PostResponse> findByGroupId(Long groupId, Pageable pageable);
 
     Page<PostResponse> findPublicPosts(Pageable pageable);
+
+    long countByAuthor(User author);
 }

@@ -23,4 +23,8 @@ public interface FriendshipService {
     List<Friendship> findUserFriendshipsByStatus(User user, FriendshipStatus status);
 
     List<User> findUserFriendsByStatus(User user, FriendshipStatus status);
+
+    List<User> findFollowersByStatus(User user, FriendshipStatus status);
+
+    Long countFollowersByStatus(User user, FriendshipStatus status);
 }
