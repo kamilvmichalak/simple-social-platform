@@ -614,7 +614,7 @@ body {
     display: grid;
     grid-template-columns: 300px 1fr;
     gap: 20px;
-    height: calc(100vh - 100px);
+    height: 80vh;
     background-color: var(--card-background);
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -845,6 +845,7 @@ body {
 .group-info h3 {
     margin: 0 0 10px;
     color: var(--text-color);
+    font-size: 1.25rem;
 }
 
 .group-description {

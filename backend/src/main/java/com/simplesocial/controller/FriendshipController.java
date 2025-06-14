@@ -129,4 +129,18 @@ public class FriendshipController {
         return ResponseEntity.ok(ApiResponse.success(
                 friendshipService.findUserFriendsByStatus(user, FriendshipStatus.ACCEPTED)));
     }
+
+    @GetMapping("/user/me/followers")
+    public ResponseEntity<ApiResponse<List<User>>> getMyFollowers(Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(
+                friendshipService.findFollowersByStatus(currentUser, FriendshipStatus.ACCEPTED)));
+    }
+
+    @GetMapping("/user/{userId}/followers/count")
+    public ResponseEntity<ApiResponse<Long>> countFollowers(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+        return ResponseEntity.ok(ApiResponse.success(
+                friendshipService.countFollowersByStatus(user, FriendshipStatus.ACCEPTED)));
+    }
 }

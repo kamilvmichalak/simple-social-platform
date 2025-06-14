@@ -90,6 +90,11 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public java.util.List<Group> findAll() {
+        return groupRepository.findAll();
+    }
+
+    @Override
     @Transactional
     public GroupMember addMember(GroupMember member) {
         return groupMemberRepository.save(member);

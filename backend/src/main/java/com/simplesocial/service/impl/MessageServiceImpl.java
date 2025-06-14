@@ -62,7 +62,8 @@ public class MessageServiceImpl implements MessageService {
     @Override
     @Transactional
     public void deleteMessage(Long id) {
-        Message message = findById(id);
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Message not found with id: " + id));
         messageRepository.delete(message);
     }
 

@@ -68,4 +68,14 @@ public class FriendshipServiceImpl implements FriendshipService {
     public List<User> findUserFriendsByStatus(User user, FriendshipStatus status) {
         return friendshipRepository.findUserFriendsByStatus(user, status);
     }
+
+    @Override
+    public List<User> findFollowersByStatus(User user, FriendshipStatus status) {
+        return friendshipRepository.findFollowersByStatus(user, status);
+    }
+
+    @Override
+    public Long countFollowersByStatus(User user, FriendshipStatus status) {
+        return friendshipRepository.countFollowersByStatus(user, status);
+    }
 }

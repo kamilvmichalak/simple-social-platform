@@ -7,6 +7,7 @@ import com.simplesocial.entity.User;
 import com.simplesocial.service.GroupService;
 import com.simplesocial.service.UserService;
 import org.springframework.security.core.Authentication;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

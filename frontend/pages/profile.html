@@ -36,9 +36,7 @@
             <div class="profile-details">
               <h2 id="profile-name">Loading...</h2>
               <p id="profile-username">@username</p>
-              <p id="profile-bio-main">No bio yet</p>
             </div>
-            <button class="btn" id="edit-profile-btn">Edit Profile</button>
           </div>
         </div>
 
@@ -49,18 +47,14 @@
               <span class="stat-label">Posts</span>
             </div>
             <div class="stat">
-              <span class="stat-value" id="friends-count">0</span>
-              <span class="stat-label">Friends</span>
-            </div>
-            <div class="stat">
-              <span class="stat-value" id="groups-count">0</span>
-              <span class="stat-label">Groups</span>
+              <span class="stat-value" id="followers-count">0</span>
+              <span class="stat-label">Followers</span>
             </div>
           </div>
 
           <div class="profile-posts">
             <h3>My Posts</h3>
-            <div id="profile-posts-list">
+            <div id="user-posts">
               <!-- Posts will be loaded here -->
             </div>
           </div>
@@ -69,38 +63,11 @@
 
       <div class="sidebar">
         <div class="sidebar-section">
-          <h3>About</h3>
-          <p id="profile-bio-sidebar">No bio yet</p>
-        </div>
-        <div class="sidebar-section">
-          <h3>Friends</h3>
-          <div id="friends-list" class="friends-list">
-            <!-- Friends will be loaded here -->
+          <h3>Followers</h3>
+          <div id="followers-list" class="friends-list">
+            <!-- Followers will be loaded here -->
           </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Edit Profile Modal -->
-    <div class="modal" id="edit-profile-modal">
-      <div class="modal-content">
-        <h3>Edit Profile</h3>
-        <form id="edit-profile-form">
-          <div class="form-group">
-            <label for="edit-name">Name</label>
-            <input type="text" id="edit-name" required />
-          </div>
-          <div class="form-group">
-            <label for="edit-bio">Bio</label>
-            <textarea id="edit-bio"></textarea>
-          </div>
-          <div class="form-actions">
-            <button type="button" class="btn btn-secondary" id="cancel-edit">
-              Cancel
-            </button>
-            <button type="submit" class="btn">Save Changes</button>
-          </div>
-        </form>
       </div>
     </div>
 

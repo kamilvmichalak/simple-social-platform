@@ -60,6 +60,14 @@ public class PostController {
         return ResponseEntity.ok(ApiResponse.success(postService.findByAuthor(user, pageable)));
     }
 
+    @GetMapping("/user/me")
+    public ResponseEntity<ApiResponse<Page<PostResponse>>> getMyPosts(
+            Authentication authentication,
+            Pageable pageable) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(postService.findByAuthor(currentUser, pageable)));
+    }
+
     @GetMapping("/feed")
     public ResponseEntity<ApiResponse<Page<PostResponse>>> getFeedPosts(
             Authentication authentication,
