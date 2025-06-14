@@ -26,6 +26,13 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.success(groupService.findAll()));
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<ApiResponse<List<Group>>> getMyGroups(Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        List<Group> groups = groupService.findUserGroups(currentUser, Pageable.unpaged()).getContent();
+        return ResponseEntity.ok(ApiResponse.success(groups));
+    }
+
     @PostMapping
     public ResponseEntity<ApiResponse<Group>> createGroup(
             @RequestBody Group group,
