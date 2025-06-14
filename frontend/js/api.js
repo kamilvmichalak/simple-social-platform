@@ -12,8 +12,10 @@ function updateNavigation() {
         navLinks.innerHTML = `
             <a href="/index.html">Home</a>
             <a href="/pages/feed.html">Feed</a>
+            <a href="/pages/people.html">People</a>
             <a href="/pages/messages.html">Messages</a>
             <a href="/pages/groups.html">Groups</a>
+            <a href="/pages/profile.html">Profile</a>
             <a href="#" onclick="logout()">Logout</a>
         `;
     } else {
