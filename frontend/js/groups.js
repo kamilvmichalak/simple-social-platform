@@ -2,11 +2,7 @@ const API_URL = 'http://localhost:8080/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadGroups();
-    loadMyGroups();
-    loadSuggestedGroups();
     setupCreateGroupModal();
-    setupSearch();
-    setupLogout();
 });
 
 async function loadGroups() {
@@ -16,19 +12,16 @@ async function loadGroups() {
             window.location.href = 'login.html';
             return;
         }
-
         const response = await fetch(`${API_URL}/groups`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
+            headers: { 'Authorization': `Bearer ${token}` }
         });
-
         if (!response.ok) {
             throw new Error('Failed to load groups');
         }
 
         const result = await response.json();
         const groups = result.data || result;
+
         displayGroups(groups);
     } catch (error) {
         console.error('Error loading groups:', error);
@@ -184,12 +177,7 @@ function displaySuggestedGroups(groups) {
                 <p>${group.membersCount} members</p>
             </div>
         `;
-
-        groupElement.addEventListener('click', () => {
-            window.location.href = `group.html?id=${group.id}`;
-        });
-
-        suggestedGroupsContainer.appendChild(groupElement);
+        container.appendChild(div);
     });
 }
 
@@ -214,7 +202,6 @@ function setupCreateGroupModal() {
         const description = document.getElementById('group-description').value.trim();
 
         try {
-            const token = localStorage.getItem('token');
             const response = await fetch(`${API_URL}/groups`, {
                 method: 'POST',
                 headers: {
@@ -223,7 +210,6 @@ function setupCreateGroupModal() {
                 },
                 body: JSON.stringify({ name, description })
             });
-
             if (!response.ok) {
                 const err = await response.json().catch(() => null);
                 throw new Error(err?.message || 'Failed to create group');

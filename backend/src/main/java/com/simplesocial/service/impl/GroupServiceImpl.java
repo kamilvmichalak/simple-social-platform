@@ -21,6 +21,11 @@ public class GroupServiceImpl implements GroupService {
     private final GroupMemberRepository groupMemberRepository;
 
     @Override
+    public java.util.List<Group> findAll() {
+        return groupRepository.findAll();
+    }
+
+    @Override
     @Transactional
     public Group createGroup(Group group, User creator) {
         group.setCreator(creator);
