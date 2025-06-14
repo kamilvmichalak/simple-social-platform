@@ -118,6 +118,7 @@ function displayMessages(messages) {
         messagesContainer.innerHTML = '<p class="no-messages">No messages yet</p>';
         return;
     }
+    messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
     messages.forEach(message => {
         const messageElement = document.createElement('div');
