@@ -57,9 +57,12 @@ function setupCreateGroupModal() {
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const name = document.getElementById('group-name').value.trim();
-        const description = document.getElementById('group-description').value.trim();
-        const token = localStorage.getItem('token');
+
+        const name = document.getElementById('group-name').value;
+        const description = document.getElementById('group-description').value;
+        const privacyEl = document.getElementById('group-privacy');
+        const privacy = privacyEl ? privacyEl.value : 'PUBLIC';
+
         try {
             const response = await fetch(`${API_URL}/groups`, {
                 method: 'POST',
