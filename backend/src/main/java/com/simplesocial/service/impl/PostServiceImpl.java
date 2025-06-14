@@ -101,6 +101,11 @@ public class PostServiceImpl implements PostService {
                 .map(this::mapToResponse);
     }
 
+    @Override
+    public long countByAuthor(User author) {
+        return postRepository.countByAuthor(author);
+    }
+
     private PostResponse mapToResponse(Post post) {
         PostResponse response = new PostResponse();
         response.setId(post.getId());

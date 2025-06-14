@@ -21,4 +21,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("SELECT p FROM Post p WHERE p.isPublic = true ORDER BY p.createdAt DESC")
     Page<Post> findPublicPosts(Pageable pageable);
+
+    long countByAuthor(User author);
 }
