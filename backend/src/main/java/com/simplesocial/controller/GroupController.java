@@ -67,6 +67,12 @@ public class GroupController {
         return ResponseEntity.ok(ApiResponse.success(groupService.searchPublicGroups(query, pageable)));
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<ApiResponse<java.util.List<Group>>> getMyGroups(Authentication authentication) {
+        User currentUser = userService.findByUsername(authentication.getName());
+        return ResponseEntity.ok(ApiResponse.success(groupService.findUserGroups(currentUser)));
+    }
+
     @GetMapping("/user/{userId}")
     public ResponseEntity<ApiResponse<Page<Group>>> getUserGroups(
             @PathVariable Long userId,

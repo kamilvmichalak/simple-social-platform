@@ -22,6 +22,8 @@ public interface GroupService {
 
     Page<Group> findUserGroups(User user, Pageable pageable);
 
+    java.util.List<Group> findUserGroups(User user);
+
     java.util.List<Group> findAll();
 
     GroupMember addMember(GroupMember member);
