@@ -200,6 +200,7 @@ function setupCreateGroupModal() {
 
         const name = document.getElementById('group-name').value.trim();
         const description = document.getElementById('group-description').value.trim();
+        const token = localStorage.getItem('token');
 
         try {
             const response = await fetch(`${API_URL}/groups`, {
