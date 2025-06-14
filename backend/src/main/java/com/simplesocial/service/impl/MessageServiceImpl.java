@@ -1,10 +1,14 @@
 package com.simplesocial.service.impl;
 
+import com.simplesocial.dto.request.MessageRequest;
+import com.simplesocial.dto.response.MessageResponse;
+import com.simplesocial.dto.response.UserResponse;
 import com.simplesocial.entity.Message;
 import com.simplesocial.entity.User;
 import com.simplesocial.exception.ResourceNotFoundException;
 import com.simplesocial.repository.MessageRepository;
 import com.simplesocial.service.MessageService;
+import com.simplesocial.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,32 +19,44 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
     private final MessageRepository messageRepository;
+    private final UserService userService;
 
     @Override
     @Transactional
-    public Message createMessage(Message message) {
-        return messageRepository.save(message);
+    public MessageResponse createMessage(MessageRequest request, User sender) {
+        User receiver = userService.findById(request.getRecipientId());
+        Message message = new Message();
+        message.setContent(request.getContent());
+        message.setSender(sender);
+        message.setReceiver(receiver);
+        message.setReadable(false);
+
+        return mapToResponse(messageRepository.save(message));
     }
 
     @Override
-    public Message findById(Long id) {
-        return messageRepository.findById(id)
+    public MessageResponse findById(Long id) {
+        Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Message not found with id: " + id));
+        return mapToResponse(message);
     }
 
     @Override
     @Transactional
-    public Message updateMessage(Long id, Message messageDetails) {
-        Message message = findById(id);
+    public MessageResponse updateMessage(Long id, MessageRequest request, User currentUser) {
+        Message message = messageRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Message not found with id: " + id));
 
-        if (messageDetails.getContent() != null) {
-            message.setContent(messageDetails.getContent());
-        }
-        if (messageDetails.isReadable() != message.isReadable()) {
-            message.setReadable(messageDetails.isReadable());
+        if (!message.getSender().equals(currentUser)) {
+            throw new ResourceNotFoundException("Not authorized to update this message");
         }
 
-        return messageRepository.save(message);
+        if (request.getContent() != null) {
+            message.setContent(request.getContent());
+        }
+
+        Message updated = messageRepository.save(message);
+        return mapToResponse(updated);
     }
 
     @Override
@@ -51,17 +67,30 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public Page<Message> findConversation(User user1, User user2, Pageable pageable) {
-        return messageRepository.findConversation(user1, user2, pageable);
+    public Page<MessageResponse> findConversation(User user1, User user2, Pageable pageable) {
+        return messageRepository.findConversation(user1, user2, pageable)
+                .map(this::mapToResponse);
     }
 
     @Override
-    public Page<Message> findUnreadMessages(User user, Pageable pageable) {
-        return messageRepository.findUnreadMessages(user, pageable);
+    public Page<MessageResponse> findUnreadMessages(User user, Pageable pageable) {
+        return messageRepository.findUnreadMessages(user, pageable)
+                .map(this::mapToResponse);
     }
 
     @Override
     public long countUnreadMessages(User user) {
         return messageRepository.countUnreadMessages(user);
+    }
+
+    private MessageResponse mapToResponse(Message message) {
+        MessageResponse response = new MessageResponse();
+        response.setId(message.getId());
+        response.setContent(message.getContent());
+        response.setSender(UserResponse.fromUser(message.getSender()));
+        response.setRecipient(UserResponse.fromUser(message.getReceiver()));
+        response.setCreatedAt(message.getCreatedAt());
+        response.setRead(message.isReadable());
+        return response;
     }
 }

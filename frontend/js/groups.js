@@ -222,7 +222,8 @@ function setupCreateGroupModal() {
 
         const name = document.getElementById('group-name').value;
         const description = document.getElementById('group-description').value;
-        const privacy = document.getElementById('group-privacy').value;
+        const privacyEl = document.getElementById('group-privacy');
+        const privacy = privacyEl ? privacyEl.value : 'PUBLIC';
 
         try {
             const token = localStorage.getItem('token');

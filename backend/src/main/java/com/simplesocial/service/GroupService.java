@@ -8,7 +8,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface GroupService {
-    Group createGroup(Group group);
+    Group createGroup(Group group, User creator);
+
+    java.util.List<Group> findAll();
 
     Group findById(Long id);
 
