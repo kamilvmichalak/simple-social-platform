@@ -111,6 +111,9 @@ async function loadMyGroups() {
 
 function displayMyGroups(groups) {
     const myGroupsContainer = document.getElementById('my-groups');
+    if (!myGroupsContainer) {
+        return;
+    }
     myGroupsContainer.innerHTML = '';
 
     if (!groups || groups.length === 0) {
@@ -177,7 +180,7 @@ function displaySuggestedGroups(groups) {
                 <p>${group.membersCount} members</p>
             </div>
         `;
-        container.appendChild(div);
+        suggestedGroupsContainer.appendChild(groupElement);
     });
 }
 
