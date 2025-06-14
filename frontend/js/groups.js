@@ -1,4 +1,5 @@
 const API_URL = 'http://localhost:8080/api';
+const DEFAULT_GROUP_IMAGE = 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
 
 document.addEventListener('DOMContentLoaded', () => {
     loadGroups();
@@ -126,10 +127,10 @@ function displayMyGroups(groups) {
         const groupElement = document.createElement('div');
         groupElement.className = 'my-group-item';
         groupElement.innerHTML = `
-            <img src="${group.coverImage || '../assets/default-group.png'}" alt="${group.name}">
+            <img src="${group.coverImage || DEFAULT_GROUP_IMAGE}" alt="${group.name}">
             <div class="my-group-info">
                 <h4>${group.name}</h4>
-                <p>${group.membersCount} members</p>
+                <p>${group.description || ''}</p>
             </div>
         `;
 
@@ -175,10 +176,10 @@ function displaySuggestedGroups(groups) {
         const groupElement = document.createElement('div');
         groupElement.className = 'suggested-group-item';
         groupElement.innerHTML = `
-            <img src="${group.coverImage || '../assets/default-group.png'}" alt="${group.name}">
+            <img src="${group.coverImage || DEFAULT_GROUP_IMAGE}" alt="${group.name}">
             <div class="suggested-group-info">
                 <h4>${group.name}</h4>
-                <p>${group.membersCount} members</p>
+                <p>${group.description || ''}</p>
             </div>
         `;
         suggestedGroupsContainer.appendChild(groupElement);
